@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Hitham Admin</title>
+<script src="RequiredOfflineFiles/jquery.js"></script>
+<script src="RequiredOfflineFiles/jquery.min.js"></script>
+<script src="RequiredOfflineFiles/bootstrap.min.js"></script>
+<link rel="stylesheet" href="RequiredOfflineFiles/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="RequiredOfflineFiles/bootstrap.min.css" />
+<style>
+th, td {
+    padding: 10px;
+    border:1px solid #000;
+}
+
+</style>
+</head>
+
+<body onload="doOnLoad()">
+
+<div class="container">
+    <div class="page-header" style="border-width: 2px; margin-left:150px; margin-right:215px;">
+    	<div class="container" style="width:inherit">
+		    <div class="row" >
+		        <div class="col-xs-10">
+		            <h3 style="text-align: center;"><b>Hitham</b></h3>
+		        </div>
+		        <div class="col-xs-2" style="height:inherit;vertical-align: middle;">
+		        	<div class="pull-right" style="height:inherit;vertical-align: middle;">
+		            	<h3></h3><button onclick="logout()">Logout</button></h3>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+    </div>
+    <div class="row">
+    	<div class="col-md-1"></div>
+    	<div class="col-md-10" style="margin-left:0px;">
+            <div class="panel with-nav-tabs panel-default" style="border-width: 2px;">
+                <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#Song" data-toggle="tab">Song</a></li>
+                            <li><a href="#Teacher" data-toggle="tab">Teacher</a></li>
+                            <li><a href="#Student" data-toggle="tab">Student</a></li>
+                        </ul>
+                </div>
+                <div class="panel-body">
+                	<div class="tab-content">
+                		<div id="Song" class="tab-pane fade in active"></div>
+                		<div id="Teacher" class="tab-pane"></div>
+                	    <div id="Student" class="tab-pane"></div>
+              		</div><!--tab content close -->
+            	</div> <!--panel body close -->
+        	</div> <!--panel nav close -->
+    	</div> <!--column close -->
+    	
+   </div><!--row close -->
+</div> <!--container close -->
+
+<script src="javascript/Global.js"></script>
+<script src="javascript/admin/admin.js"></script>
+<script src="javascript/admin/ManageSongs.js"></script>
+<script src="javascript/admin/ManageStudent.js"></script>
+<script src="javascript/admin/ManageTeacher.js"></script>
+<script src="javascript/admin/AddAdminSong.js"></script>
+</body>
+</html>

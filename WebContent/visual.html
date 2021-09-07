@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hitham Visualizations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="jquery-3.2.1.js"></script>
+  <script type="text/javascript">
+  
+	var arrdata=[];
+	var student_id;
+	
+  
+    function drawChart() {	
+    
+     // console.log(arrdata);
+      var chardata = google.visualization.arrayToDataTable(arrdata);
+      //console.log(chardata);
+
+      var view = new google.visualization.DataView(chardata);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+      var options = {
+        title: "Time line of the song",
+        width: 1000,
+        height: 400,
+        bar: {groupWidth: "100%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+      chart.draw(view, options);
+      arrdata.length=0;
+      console.log(arrdata.length)
+  }
+    
+    function myfunction2(pid){
+    	var uri="webapi/playlist/fetchAssignedRecordings/"+pid;
+    	console.log(uri);
+    	playlist_id=pid;
+    	$.ajax({ 
+    		   type: "POST",
+    		   dataType: "json",
+    		   url: uri,
+    		   success: function(data){
+    			   var n=data.length;
+    			  // var strlinks = '<div class="dropdown"> <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Select Recording </button><div class="dropdown-menu">';
+    			  var strlinks='<thead><tr><th>SongName</th><th>PLAY Time(sec)</th><th>Total Time(sec)</th></tr></thead><tbody>'; 
+    			  for(var i=0;i<n;i++){
+    					   var name=data[i].recording_name;
+    					   var id=data[i].recording_id;
+    					   strlinks+='<tr><td><a id="'+id+'" class="dropdown-item" onclick="myfunction(this.id)">'+name+'</a></td></tr>';
+    				  }
+    				   	strlinks+='</tbody></table>';
+    				   	document.getElementById("song_selector").innerHTML=strlinks;
+    		   },
+    		   error: function(e) {
+    		        console.log(e.message);
+    		    }
+    	});
+    }
+    
+    function myfunction1(sid){
+    	var uri="webapi/playlist/assignedForStudent/"+sid;
+    	student_id=sid;
+    	console.log(uri);
+    	$.ajax({ 
+    		   type: "POST",
+    		   dataType: "json",
+    		   url: uri,
+    		   success: function(data){
+    			   var n=data.length;
+    			   var strlinks = '<div class="dropdown"> <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Select Playlist </button><div class="dropdown-menu">';
+    				  for(var i=0;i<n;i++){
+    					   var name=data[i].playlist_name;
+    					   var id=data[i].playlist_id;
+    					   strlinks+='<a id="'+id+'" class="dropdown-item" onclick="myfunction2(this.id)">'+name+'</a>';
+    				  }
+    				   	strlinks+='</div></div>';
+    				   	document.getElementById("playlist_selector").innerHTML=strlinks;
+    		   },
+    		   error: function(e) {
+    		        console.log(e.message);
+    		    }
+    	});
+    }
+    
+  $(document).ready(function(){
+	
+	  var tid = localStorage.getItem('teacher_pk'); 
+	  var uri="webapi/teacher/fetchAssignedStudents/"+tid;
+	  
+		$.ajax({ 
+			   type: "POST",
+			   dataType: "json",
+			   url: uri,
+			   success: function(data){
+			   var n=data.length;
+			   //var strlinks='<select id="students" onclick="myfunction1(this.value)">';
+			   var strlinks = '<div class="dropdown"> <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Select Student </button><div class="dropdown-menu">';
+			  for(var i=0;i<n;i++){
+				   var name=data[i].student_name;
+				   var id=data[i].student_pk;
+				   strlinks+='<a id="'+id+'" class="dropdown-item" onclick="myfunction1(this.id)">'+name+'</a>';
+			  }
+			   	strlinks+='</div></div>';
+			   	document.getElementById("student_selector").innerHTML=strlinks;
+			   },
+			   error: function(e) {
+			        console.log(e.message);
+			    }
+	});
+  }); 
+    
+   function myfunction(rid){
+	   alert("mmm");
+	console.log(rid+" "+student_id);
+   	var Header= ['Second', 'Frequency', { role: 'style' }];
+    arrdata.push(Header);
+   	 
+   	 var uri="webapi/visualize/SongTimelineChart/"+rid+"/"+student_id;
+   		console.log(uri);
+   		$.ajax({ 
+   			   type: "POST",
+   			   dataType: "json",
+   			   url: uri,
+   			   success: function(data){
+   				var h=['1',data[0].x1, 'Cu'];
+   				arrdata.push(h);
+   				var h=['2',data[0].x2, 'Cu'];
+   				arrdata.push(h);
+   				var h=['3',data[0].x3, 'Cu'];
+   				arrdata.push(h);
+   				var h=['4',data[0].x4, 'Cu'];
+   				arrdata.push(h);
+   				var h=['5',data[0].x5, 'Cu'];
+   				arrdata.push(h);
+   				var h=['6',data[0].x6, 'Cu'];
+   				arrdata.push(h);
+   				var h=['7',data[0].x7, 'Cu'];
+   				arrdata.push(h);
+   				var h=['8',data[0].x8, 'Cu'];
+   				arrdata.push(h);
+   				var h=['9',data[0].x9, 'Cu'];
+   				arrdata.push(h);
+   				var h=['10',data[0].x10, 'Cu'];
+   				arrdata.push(h);
+   				var h=['11',data[0].x11, 'Cu'];
+   				arrdata.push(h);
+   				var h=['12',data[0].x12, 'Cu'];
+   				arrdata.push(h);
+   				var h=['13',data[0].x13, 'Cu'];
+   				arrdata.push(h);
+   				var h=['14',data[0].x14, 'Cu'];
+   				arrdata.push(h);
+   				var h=['15',data[0].x15, 'Cu'];
+   				arrdata.push(h);
+   				var h=['16',data[0].x16, 'Cu'];
+   				arrdata.push(h);
+   				var h=['17',data[0].x17, 'Cu'];
+   				arrdata.push(h);
+   				var h=['18',data[0].x18, 'Cu'];
+   				arrdata.push(h);
+   				var h=['19',data[0].x19, 'Cu'];
+   				arrdata.push(h);
+   				var h=['20',data[0].x20, 'Cu'];
+   				arrdata.push(h);
+   				var h=['21',data[0].x21, 'Cu'];
+   				arrdata.push(h);
+   				var h=['22',data[0].x22, 'Cu'];
+   				arrdata.push(h);
+   				var h=['23',data[0].x23, 'Cu'];
+   				arrdata.push(h);
+   				var h=['24',data[0].x24, 'Cu'];
+   				arrdata.push(h);
+   				var h=['25',data[0].x25, 'Cu'];
+   				arrdata.push(h);
+   				var h=['26',data[0].x26, 'Cu'];
+   				arrdata.push(h);
+   				var h=['27',data[0].x27, 'Cu'];
+   				arrdata.push(h);
+   				var h=['28',data[0].x28, 'Cu'];
+   				arrdata.push(h);
+   				var h=['29',data[0].x29, 'Cu'];
+   				arrdata.push(h);
+   				var h=['30',data[0].x30, 'Cu'];
+   				arrdata.push(h);
+   				var h=['31',data[0].x31, 'Cu'];
+   				arrdata.push(h);
+   				var h=['32',data[0].x32, 'Cu'];
+   				arrdata.push(h);
+   				var h=['33',data[0].x33, 'Cu'];
+   				arrdata.push(h);
+   				var h=['34',data[0].x34, 'Cu'];
+   				arrdata.push(h);
+   				var h=['35',data[0].x35, 'Cu'];
+   				arrdata.push(h);
+   				var h=['36',data[0].x36, 'Cu'];
+   				arrdata.push(h);
+   				var h=['37',data[0].x37, 'Cu'];
+   				arrdata.push(h);
+   				var h=['38',data[0].x38, 'Cu'];
+   				arrdata.push(h);
+   				var h=['39',data[0].x39, 'Cu'];
+   				arrdata.push(h);
+   				var h=['40',data[0].x40, 'Cu'];
+   				arrdata.push(h);
+   				var h=['41',data[0].x41, 'Cu'];
+   				arrdata.push(h);
+   				var h=['42',data[0].x42, 'Cu'];
+   				arrdata.push(h);
+   				var h=['43',data[0].x43, 'Cu'];
+   				arrdata.push(h);
+   				var h=['44',data[0].x44, 'Cu'];
+   				arrdata.push(h);
+   				var h=['45',data[0].x45, 'Cu'];
+   				arrdata.push(h);
+   				var h=['46',data[0].x46, 'Cu'];
+   				arrdata.push(h);
+   				var h=['47',data[0].x47, 'Cu'];
+   				arrdata.push(h);
+   				var h=['48',data[0].x48, 'Cu'];
+   				arrdata.push(h);
+   				var h=['49',data[0].x49, 'Cu'];
+   				arrdata.push(h);
+   				var h=['50',data[0].x50, 'Cu'];
+   				arrdata.push(h);
+   				var h=['51',data[0].x51, 'Cu'];
+   				arrdata.push(h);
+   				var h=['52',data[0].x52, 'Cu'];
+   				arrdata.push(h);
+   				var h=['53',data[0].x53, 'Cu'];
+   				arrdata.push(h);
+   				var h=['54',data[0].x54, 'Cu'];
+   				arrdata.push(h);
+   				var h=['55',data[0].x55, 'Cu'];
+   				arrdata.push(h);
+   				var h=['56',data[0].x56, 'Cu'];
+   				arrdata.push(h);
+   				var h=['57',data[0].x57, 'Cu'];
+   				arrdata.push(h);
+   				var h=['58',data[0].x58, 'Cu'];
+   				arrdata.push(h);
+   				var h=['59',data[0].x59, 'Cu'];
+   				arrdata.push(h);
+   				var h=['60',data[0].x60, 'Cu'];
+   				arrdata.push(h);
+   				var h=['61',data[0].x61, 'Cu'];
+   				arrdata.push(h);
+   				var h=['62',data[0].x62, 'Cu'];
+   				arrdata.push(h);
+   				var h=['63',data[0].x63, 'Cu'];
+   				arrdata.push(h);
+   				var h=['64',data[0].x64, 'Cu'];
+   				arrdata.push(h);
+   				var h=['65',data[0].x65, 'Cu'];
+   				arrdata.push(h);
+   				var h=['66',data[0].x66, 'Cu'];
+   				arrdata.push(h);
+   				var h=['67',data[0].x67, 'Cu'];
+   				arrdata.push(h);
+   				var h=['68',data[0].x68, 'Cu'];
+   				arrdata.push(h);
+   				var h=['69',data[0].x69, 'Cu'];
+   				arrdata.push(h);
+   				var h=['70',data[0].x70, 'Cu'];
+   				arrdata.push(h);
+   				var h=['71',data[0].x71, 'Cu'];
+   				arrdata.push(h);
+   				var h=['72',data[0].x72, 'Cu'];
+   				arrdata.push(h);
+   				var h=['73',data[0].x73, 'Cu'];
+   				arrdata.push(h);
+   				var h=['74',data[0].x74, 'Cu'];
+   				arrdata.push(h);
+   				var h=['75',data[0].x75, 'Cu'];
+   				arrdata.push(h);
+   				var h=['76',data[0].x76, 'Cu'];
+   				arrdata.push(h);
+   				var h=['77',data[0].x77, 'Cu'];
+   				arrdata.push(h);
+   				var h=['78',data[0].x78, 'Cu'];
+   				arrdata.push(h);
+   				var h=['79',data[0].x79, 'Cu'];
+   				arrdata.push(h);
+   				var h=['80',data[0].x80, 'Cu'];
+   				arrdata.push(h);
+   				var h=['81',data[0].x81, 'Cu'];
+   				arrdata.push(h);
+   				var h=['82',data[0].x82, 'Cu'];
+   				arrdata.push(h);
+   				var h=['83',data[0].x83, 'Cu'];
+   				arrdata.push(h);
+   				var h=['84',data[0].x84, 'Cu'];
+   				arrdata.push(h);
+   				var h=['85',data[0].x85, 'Cu'];
+   				arrdata.push(h);
+   				var h=['86',data[0].x86, 'Cu'];
+   				arrdata.push(h);
+   				var h=['87',data[0].x87, 'Cu'];
+   				arrdata.push(h);
+   				var h=['88',data[0].x88, 'Cu'];
+   				arrdata.push(h);
+   				var h=['89',data[0].x89, 'Cu'];
+   				arrdata.push(h);
+   				var h=['90',data[0].x90, 'Cu'];
+   				arrdata.push(h);
+   				var h=['91',data[0].x91, 'Cu'];
+   				arrdata.push(h);
+   				var h=['92',data[0].x92, 'Cu'];
+   				arrdata.push(h);
+   				var h=['93',data[0].x93, 'Cu'];
+   				arrdata.push(h);
+   				var h=['94',data[0].x94, 'Cu'];
+   				arrdata.push(h);
+   				var h=['95',data[0].x95, 'Cu'];
+   				arrdata.push(h);
+   				var h=['96',data[0].x96, 'Cu'];
+   				arrdata.push(h);
+   				var h=['97',data[0].x97, 'Cu'];
+   				arrdata.push(h);
+   				var h=['98',data[0].x98, 'Cu'];
+   				arrdata.push(h);
+   				var h=['99',data[0].x99, 'Cu'];
+   				arrdata.push(h);
+   				var h=['100',data[0].x100, 'Cu'];
+   				arrdata.push(h);
+   				var h=['101',data[0].x101, 'Cu'];
+   				arrdata.push(h);
+   				var h=['102',data[0].x102, 'Cu'];
+   				arrdata.push(h);
+   				var h=['103',data[0].x103, 'Cu'];
+   				arrdata.push(h);
+   				var h=['104',data[0].x104, 'Cu'];
+   				arrdata.push(h);
+   				var h=['105',data[0].x105, 'Cu'];
+   				arrdata.push(h);
+   				var h=['106',data[0].x106, 'Cu'];
+   				arrdata.push(h);
+   				var h=['107',data[0].x107, 'Cu'];
+   				arrdata.push(h);
+   				var h=['108',data[0].x108, 'Cu'];
+   				arrdata.push(h);
+   				var h=['109',data[0].x109, 'Cu'];
+   				arrdata.push(h);
+   				var h=['110',data[0].x110, 'Cu'];
+   				arrdata.push(h);
+   				var h=['111',data[0].x111, 'Cu'];
+   				arrdata.push(h);
+   				var h=['112',data[0].x112, 'Cu'];
+   				arrdata.push(h);
+   				var h=['113',data[0].x113, 'Cu'];
+   				arrdata.push(h);
+   				var h=['114',data[0].x114, 'Cu'];
+   				arrdata.push(h);
+   				var h=['115',data[0].x115, 'Cu'];
+   				arrdata.push(h);
+   				var h=['116',data[0].x116, 'Cu'];
+   				arrdata.push(h);
+   				var h=['117',data[0].x117, 'Cu'];
+   				arrdata.push(h);
+   				var h=['118',data[0].x118, 'Cu'];
+   				arrdata.push(h);
+   				var h=['119',data[0].x119, 'Cu'];
+   				arrdata.push(h);
+   				var h=['120',data[0].x120, 'Cu'];
+   				arrdata.push(h);
+   				var h=['121',data[0].x121, 'Cu'];
+   				arrdata.push(h);
+   				var h=['122',data[0].x122, 'Cu'];
+   				arrdata.push(h);
+   				var h=['123',data[0].x123, 'Cu'];
+   				arrdata.push(h);
+   				var h=['124',data[0].x124, 'Cu'];
+   				arrdata.push(h);
+   				var h=['125',data[0].x125, 'Cu'];
+   				arrdata.push(h);
+   				var h=['126',data[0].x126, 'Cu'];
+   				arrdata.push(h);
+   				var h=['127',data[0].x127, 'Cu'];
+   				arrdata.push(h);
+   				var h=['128',data[0].x128, 'Cu'];
+   				arrdata.push(h);
+   				var h=['129',data[0].x129, 'Cu'];
+   				arrdata.push(h);
+   				var h=['130',data[0].x130, 'Cu'];
+   				arrdata.push(h);
+   				var h=['131',data[0].x131, 'Cu'];
+   				arrdata.push(h);
+   				var h=['132',data[0].x132, 'Cu'];
+   				arrdata.push(h);
+   				var h=['133',data[0].x133, 'Cu'];
+   				arrdata.push(h);
+   				var h=['134',data[0].x134, 'Cu'];
+   				arrdata.push(h);
+   				var h=['135',data[0].x135, 'Cu'];
+   				arrdata.push(h);
+   				var h=['136',data[0].x136, 'Cu'];
+   				arrdata.push(h);
+   				var h=['137',data[0].x137, 'Cu'];
+   				arrdata.push(h);
+   				var h=['138',data[0].x138, 'Cu'];
+   				arrdata.push(h);
+   				var h=['139',data[0].x139, 'Cu'];
+   				arrdata.push(h);
+   				var h=['140',data[0].x140, 'Cu'];
+   				arrdata.push(h);
+   				var h=['141',data[0].x141, 'Cu'];
+   				arrdata.push(h);
+   				var h=['142',data[0].x142, 'Cu'];
+   				arrdata.push(h);
+   				var h=['143',data[0].x143, 'Cu'];
+   				arrdata.push(h);
+   				var h=['144',data[0].x144, 'Cu'];
+   				arrdata.push(h);
+   				var h=['145',data[0].x145, 'Cu'];
+   				arrdata.push(h);
+   				var h=['146',data[0].x146, 'Cu'];
+   				arrdata.push(h);
+   				var h=['147',data[0].x147, 'Cu'];
+   				arrdata.push(h);
+   				var h=['148',data[0].x148, 'Cu'];
+   				arrdata.push(h);
+   				var h=['149',data[0].x149, 'Cu'];
+   				arrdata.push(h);
+   				var h=['150',data[0].x150, 'Cu'];
+   				arrdata.push(h);
+   				var h=['151',data[0].x151, 'Cu'];
+   				arrdata.push(h);
+   				var h=['152',data[0].x152, 'Cu'];
+   				arrdata.push(h);
+   				var h=['153',data[0].x153, 'Cu'];
+   				arrdata.push(h);
+   				var h=['154',data[0].x154, 'Cu'];
+   				arrdata.push(h);
+   				var h=['155',data[0].x155, 'Cu'];
+   				arrdata.push(h);
+   				var h=['156',data[0].x156, 'Cu'];
+   				arrdata.push(h);
+   				var h=['157',data[0].x157, 'Cu'];
+   				arrdata.push(h);
+   				var h=['158',data[0].x158, 'Cu'];
+   				arrdata.push(h);
+   				var h=['159',data[0].x159, 'Cu'];
+   				arrdata.push(h);
+   				var h=['160',data[0].x160, 'Cu'];
+   				arrdata.push(h);
+   				var h=['161',data[0].x161, 'Cu'];
+   				arrdata.push(h);
+   				var h=['162',data[0].x162, 'Cu'];
+   				arrdata.push(h);
+   				var h=['163',data[0].x163, 'Cu'];
+   				arrdata.push(h);
+   				var h=['164',data[0].x164, 'Cu'];
+   				arrdata.push(h);
+   				var h=['165',data[0].x165, 'Cu'];
+   				arrdata.push(h);
+   				var h=['166',data[0].x166, 'Cu'];
+   				arrdata.push(h);
+   				var h=['167',data[0].x167, 'Cu'];
+   				arrdata.push(h);
+   				var h=['168',data[0].x168, 'Cu'];
+   				arrdata.push(h);
+   				var h=['169',data[0].x169, 'Cu'];
+   				arrdata.push(h);
+   				var h=['170',data[0].x170, 'Cu'];
+   				arrdata.push(h);
+   				var h=['171',data[0].x171, 'Cu'];
+   				arrdata.push(h);
+   				var h=['172',data[0].x172, 'Cu'];
+   				arrdata.push(h);
+   				var h=['173',data[0].x173, 'Cu'];
+   				arrdata.push(h);
+   				var h=['174',data[0].x174, 'Cu'];
+   				arrdata.push(h);
+   				var h=['175',data[0].x175, 'Cu'];
+   				arrdata.push(h);
+   				var h=['176',data[0].x176, 'Cu'];
+   				arrdata.push(h);
+   				var h=['177',data[0].x177, 'Cu'];
+   				arrdata.push(h);
+   				var h=['178',data[0].x178, 'Cu'];
+   				arrdata.push(h);
+   				var h=['179',data[0].x179, 'Cu'];
+   				arrdata.push(h);
+   				var h=['180',data[0].x180, 'Cu'];
+   				arrdata.push(h);
+   				var h=['181',data[0].x181, 'Cu'];
+   				arrdata.push(h);
+   				var h=['182',data[0].x182, 'Cu'];
+   				arrdata.push(h);
+   				var h=['183',data[0].x183, 'Cu'];
+   				arrdata.push(h);
+   				var h=['184',data[0].x184, 'Cu'];
+   				arrdata.push(h);
+   				var h=['185',data[0].x185, 'Cu'];
+   				arrdata.push(h);
+   				var h=['186',data[0].x186, 'Cu'];
+   				arrdata.push(h);
+   				var h=['187',data[0].x187, 'Cu'];
+   				arrdata.push(h);
+   				var h=['188',data[0].x188, 'Cu'];
+   				arrdata.push(h);
+   				var h=['189',data[0].x189, 'Cu'];
+   				arrdata.push(h);
+   				var h=['190',data[0].x190, 'Cu'];
+   				arrdata.push(h);
+   				var h=['191',data[0].x191, 'Cu'];
+   				arrdata.push(h);
+   				var h=['192',data[0].x192, 'Cu'];
+   				arrdata.push(h);
+   				var h=['193',data[0].x193, 'Cu'];
+   				arrdata.push(h);
+   				var h=['194',data[0].x194, 'Cu'];
+   				arrdata.push(h);
+   				var h=['195',data[0].x195, 'Cu'];
+   				arrdata.push(h);
+   				var h=['196',data[0].x196, 'Cu'];
+   				arrdata.push(h);
+   				var h=['197',data[0].x197, 'Cu'];
+   				arrdata.push(h);
+   				var h=['198',data[0].x198, 'Cu'];
+   				arrdata.push(h);
+   				var h=['199',data[0].x199, 'Cu'];
+   				arrdata.push(h);
+   				var h=['200',data[0].x200, 'Cu'];
+   				arrdata.push(h);
+   				var h=['201',data[0].x201, 'Cu'];
+   				arrdata.push(h);
+   				var h=['202',data[0].x202, 'Cu'];
+   				arrdata.push(h);
+   				var h=['203',data[0].x203, 'Cu'];
+   				arrdata.push(h);
+   				var h=['204',data[0].x204, 'Cu'];
+   				arrdata.push(h);
+   				var h=['205',data[0].x205, 'Cu'];
+   				arrdata.push(h);
+   				var h=['206',data[0].x206, 'Cu'];
+   				arrdata.push(h);
+   				var h=['207',data[0].x207, 'Cu'];
+   				arrdata.push(h);
+   				var h=['208',data[0].x208, 'Cu'];
+   				arrdata.push(h);
+   				var h=['209',data[0].x209, 'Cu'];
+   				arrdata.push(h);
+   				var h=['210',data[0].x210, 'Cu'];
+   				arrdata.push(h);
+   				var h=['211',data[0].x211, 'Cu'];
+   				arrdata.push(h);
+   				var h=['212',data[0].x212, 'Cu'];
+   				arrdata.push(h);
+   				var h=['213',data[0].x213, 'Cu'];
+   				arrdata.push(h);
+   				var h=['214',data[0].x214, 'Cu'];
+   				arrdata.push(h);
+   				var h=['215',data[0].x215, 'Cu'];
+   				arrdata.push(h);
+   				var h=['216',data[0].x216, 'Cu'];
+   				arrdata.push(h);
+   				var h=['217',data[0].x217, 'Cu'];
+   				arrdata.push(h);
+   				var h=['218',data[0].x218, 'Cu'];
+   				arrdata.push(h);
+   				var h=['219',data[0].x219, 'Cu'];
+   				arrdata.push(h);
+   				var h=['220',data[0].x220, 'Cu'];
+   				arrdata.push(h);
+   				var h=['221',data[0].x221, 'Cu'];
+   				arrdata.push(h);
+   				var h=['222',data[0].x222, 'Cu'];
+   				arrdata.push(h);
+   				var h=['223',data[0].x223, 'Cu'];
+   				arrdata.push(h);
+   				var h=['224',data[0].x224, 'Cu'];
+   				arrdata.push(h);
+   				var h=['225',data[0].x225, 'Cu'];
+   				arrdata.push(h);
+   				var h=['226',data[0].x226, 'Cu'];
+   				arrdata.push(h);
+   				var h=['227',data[0].x227, 'Cu'];
+   				arrdata.push(h);
+   				var h=['228',data[0].x228, 'Cu'];
+   				arrdata.push(h);
+   				var h=['229',data[0].x229, 'Cu'];
+   				arrdata.push(h);
+   				var h=['230',data[0].x230, 'Cu'];
+   				arrdata.push(h);
+   				var h=['231',data[0].x231, 'Cu'];
+   				arrdata.push(h);
+   				var h=['232',data[0].x232, 'Cu'];
+   				arrdata.push(h);
+   				var h=['233',data[0].x233, 'Cu'];
+   				arrdata.push(h);
+   				var h=['234',data[0].x234, 'Cu'];
+   				arrdata.push(h);
+   				var h=['235',data[0].x235, 'Cu'];
+   				arrdata.push(h);
+   				var h=['236',data[0].x236, 'Cu'];
+   				arrdata.push(h);
+   				var h=['237',data[0].x237, 'Cu'];
+   				arrdata.push(h);
+   				var h=['238',data[0].x238, 'Cu'];
+   				arrdata.push(h);
+   				var h=['239',data[0].x239, 'Cu'];
+   				arrdata.push(h);
+   				var h=['240',data[0].x240, 'Cu'];
+   				arrdata.push(h);
+   				console.log("Arrdata data values : ",arrdata);
+   				google.charts.load("current", {packages:['corechart']});
+   			   	google.charts.setOnLoadCallback(drawChart);
+   			   },
+   			   error: function(e) {
+   			        console.log(e.message);
+   			    }
+   	});
+   		
+   	  
+   } 
+   
+  
+   
+ </script>
+<div id="student_selector" style="float:left;"></div>
+<div id="playlist_selector" style="margin-left:500px;"></div>
+<div id="song_selector" style="float:right;"></div>
+<div id="columnchart_values" style="width: 900px; height: 300px; margin-top:100px;"></div>
+
+</body>
+</html>

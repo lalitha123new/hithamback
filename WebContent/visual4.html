@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+ <!-- new visual4 file with angularjs code -->
+ 
+<html lang="en" ng-app="hitham">
+<head>
+
+  <title>Hitham Visualizations</title>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  
+  <!-- material design file - Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+  
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+  
+  <!-- downloaded all the above files and saved in the system -->
+  <script src="javascript/javascript_visual/jquery.min.js"></script>
+  <script src="javascript/javascript_visual/bootstrap.min.js"></script> 
+  <script type="text/javascript" src="javascript/javascript_visual/loader.js"></script>
+  
+  <!-- angularjs files -->
+  <script src="jquery-3.2.1.js"></script>
+  <script src="EXTERNAL/jquery.min.js"></script>
+  <script src="EXTERNAL/angular.min.js"></script> 
+  <script src="javascript/javascript_visual/visual4Controller.js"></script>
+  
+ 
+  <style>
+  
+/* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+}
+    
+li:hover{
+  cursor: pointer;
+}
+
+a:hover{
+  cursor: pointer;
+}
+    
+/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+.row.content {height: 450px}
+    
+/* Set gray background color and 100% height */
+.sidenav {
+  padding-top: 20px;
+  background-color: #f1f1f1;
+  height: 100%;
+}
+
+/* Set black background color, white text and some padding */
+footer {
+  background-color: #555;
+  color: white;
+  padding: 15px;
+}
+    
+ /* On small screens, set height to 'auto' for sidenav and grid */
+ @media screen and (max-width: 767px) {
+ 
+   .sidenav {
+     height: auto;
+     padding: 15px;
+   }
+   .row.content {
+   height:auto;
+   } 
+ }
+ 
+ #student_selector{
+ 
+ margin-top:20px;
+ 
+ }
+ 
+ #playlist_selector {
+ float:right;
+ margin-top:20px;
+ margin-right:100px;
+ }
+ </style>
+  
+</head>
+
+
+<body ng-controller="visual4Controller">
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand">Hitham</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="teacherControl.html">Home</a></li>
+      <li><a href="visual3.html">Student Level Analysis</a></li>
+      <li class="active"><a href="visual4.html">Raaga-Taal Level Analysis</a></li>
+      <!-- <li><a href="visual5.html">Student-Song HeatMap</a></li> -->
+      
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+    	<!-- <li><a href="#playlistProfileForm"  data-toggle="modal" style ="text-decoration: none;border:1px; border-radius: 10px; margin-top: 5px; background-color: SlateBlue; float:left; color: white; padding: 10px 25px; text-align: center; text-decoration: none;	display: inline-block">Create PlayList</a></li>
+    	<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+	  	<li><a href="#recordingProfileForm" onclick="getSongList()"  data-toggle="modal" style ="text-decoration: none; float:right; border:1px; margin-top: 5px; border-radius: 10px; margin-right: 100px; background-color: SlateBlue; color: white; padding: 10px 25px; text-align: center; text-decoration: none;display: inline-block">Create Recording</a></li> -->
+        <li><a href="#" ng-click="logout()" ><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
+      </ul>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+<!-- <div class="row">
+<button type="button" class="btn btn-primary" style="float:right; margin-top:20px; margin-right:80px;" onclick="location.href='visual3.html';">Back</button>
+</div> -->
+  <div class="row content">
+  <div class="col-md-6">
+  <div class="col-md-1"></div>
+  <div class="col-md-4">
+ 
+    <div id="piechart" style="width: 400px; height: 400px;"></div> 
+      <div class="dropdown" id="raaga_selector">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+    <span>Select Raag</span><span class="caret"></span></button>
+    <ul class="dropdown-menu" id="student_ddn">
+      <li><a href="#">Salah</a></li>
+      <li><a href="#">Mane</a></li>
+      <li><a href="#">Firmino</a></li>
+    </ul>
+  </div>
+      
+ <div id="piechart3" style="width: 400px; height: 400px;"></div>
+</div>
+ <div class="col-md-1"></div>
+ </div>
+ 
+ 
+  <div class="col-md-6">
+<div class="col-md-1"></div>
+<div class="col-md-4">
+<!-- <button type="button" class="btn btn-primary" style="float:right; margin-top:20px; margin-right:20px;" onclick="location.href='visual3.html';">Back</button> -->
+  <div class="row"></div>
+     <div id="piechart1" style="width: 400px; height: 400px;"></div> 
+     <div class="dropdown" id="taal_selector">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+    <span>Select taal</span><span class="caret"></span></button>
+    <ul class="dropdown-menu" id="student_ddn">
+      <li><a href="#">Salah</a></li>
+      <li><a href="#">Mane</a></li>
+      <li><a href="#">Firmino</a></li>
+    </ul>
+  </div>
+     <div id="piechart4" style="width: 400px; height: 400px;"></div>
+</div>
+ <div class="col-md-1"></div>
+ </div>    
+     
+      
+</div>
+</div>
+
+</body>
+</html>
+

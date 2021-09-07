@@ -1,0 +1,33 @@
+
+	<div>
+		<div>
+			Student ID : 
+			<select id="student_select" onchange=student_select_change()>
+			</select>
+		</div>
+		
+		<div>
+			<input type="checkbox" id="namecheckbox" onchange="student_select_change()" />Show Student Name
+		</div>
+		
+		<!--  <div>
+			Record : 
+			<select id="record_select"></select>
+		</div>
+		-->
+		<div>
+			<div id="activity_Display" style="display:none">
+				<table class="table" id="activity_Display_table">
+					<!--  <caption id="dataset_caption" style="text-align: center;"></caption>-->
+				    <thead id="activity_Display_heading"></thead>
+				    <tbody  id="activity_Display_body"></tbody>
+				</table>
+				<div>
+					<button onclick=downloadData()>Download</button>
+					<div id="dummy"></div>
+				</div>
+				
+			</div>
+			<div id="no_activity_display" style="display:block">No Activities</div>
+		</div>
+	</div>

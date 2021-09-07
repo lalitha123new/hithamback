@@ -1,0 +1,151 @@
+
+<div class="row" style="padding-top:0px;">
+
+<div class="col-sm-12" >
+<a href="#songProfileForm"   data-toggle="modal">Create New song</a>
+	<div style = "overflow-y: scroll ; height:450px; padding-top:10px">
+		<table id="songList" class="display" style = "width:400px" >
+		</table>
+	</div>
+
+</div>
+</div>
+
+<div id="songProfileForm" class="modal fade">
+  <div class="modal-dialog" id="playlistmodal">
+  <form class="form-horizontal"  enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" onclick="close1()"  aria-hidden="true">&times;</button>
+        <h4 class="modal-title">New Song</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+   			<div class="form-group">
+			<label class="control-label col-sm-3">Song Name</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="songName" id="songName"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song URL</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control songURL" name="songURL"  id="songURL" style="width:250px" onkeyup="myFunction1()"  />
+			</div>
+		</div>
+		<h5 style="text-align:center;font-weight:900;">Or</h5>
+       <div class="form-group">
+        <label class="control-label col-sm-3"></label>
+         <div class="col-sm-7">
+           <!--  <p><input type="file" name="upload_mp3" id="fileForm"  onkeyup="myFunction2()" ng-model = "image" ng-click="upload_pic()" /></p> -->
+            <p><input type="file"  class="upload_mp3" name="upload_mp3" id="fileForm"  onclick="myFunction2()" /></p>
+        </div>
+       </div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song Raga</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="songRaaga" id="songRaaga"/>
+				
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song Tala</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="songTala" id="songTala"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song Singer</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="songSinger" id="songSinger"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song Composer</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="songComposer" id="songComposer"/>
+			</div>
+		</div>
+           
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="close1()">Close</button>
+       <!--  <button type="button" class="btn btn-primary" id="upload_btn_mp3">Submit</button> -->
+       <a href="#" class="btn btn-primary"  id = "upload_btn_mp3"  value="Login" onclick="upload_mp3()">Submit</a>
+       
+       <!-- <a href="#" class="btn btn-primary"  id="upload_btn_mp3" >Submit</a> -->
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- song edit form -->
+<div id="songEditForm" class="modal fade">
+  <div class="modal-dialog" id="playlistmodal">
+  <form class="form-horizontal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" onclick="close1()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Edit Song Details</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+      	<div class="form-group">
+			<label class="control-label col-sm-3">Song Name	</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control songURL2" style="width:250px" name="songName2" id="songName2"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song URL	</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control songURL1" style="width:250px" name="songURL2"  id="songURL2"/>
+			</div>
+		</div>
+		<h5 style="text-align:center;font-weight:900;">Or</h5>
+       <div class="form-group">
+        <label class="control-label col-sm-3"></label>
+        <div class="col-sm-7">
+         <!--  <input type="file" name="file" class="form-control" style="width:250px"  id="fileForm"/> -->
+        
+        <!-- <p><input type="file" name="upload_editmp3file1" id="fileForm" ng-model = "image" ng-click="upload_pic()"/></p> -->
+        <p><input type="file" class="upload1_mp3" name="upload_editmp3file1" onclick="myFunction2()" id="fileForm" /></p> 
+        </div>
+      </div>
+		
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song Raaga</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="songRaaga2" id="songRaaga2"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song Taala</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="songTala2" id="songTala2"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song Singer</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="songSinger2" id="songSinger2"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Song Composer</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="songComposer2" id="songComposer2"/>
+			</div>
+		</div>
+           
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="close1()">Close</button>
+       <!-- <button type="button" class="btn btn-primary"  onclick="saveEditedSong()" id="btn2" >Save</button> -->
+       <a href="#" class="btn btn-primary"  id = "upload_record1"  value="Login1" onclick="upload_editSong()">Submit</a>
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+

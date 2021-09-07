@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html ng-app="hitham">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Hitham Teacher</title>
+
+<script src="EXTERNAL/jquery.min.js"></script>
+<script src="EXTERNAL/angular.min.js"></script>
+<script src="RequiredOfflineFiles/jquery.js"></script>
+<script src="RequiredOfflineFiles/jquery.min.js"></script>
+<script src="EXTERNAL/jquery-2.1.4.min.js"></script>
+<script src="RequiredOfflineFiles/bootstrap.min.js"></script>
+<script src="javascript/Global.js"></script>
+<script src="javascript/excelexportjs.js"></script>
+<script src="javascript/Addplaylist.js"></script>
+<script src="javascript/AddRecording.js"></script>
+<script src="NewTeacher.js"></script>
+<!-- <script src="javascript/teacher/ManageStudentsForTeacher.js"></script>  -->
+<!-- <script src="javascript/teacher/ManagePlaylist.js"></script>
+<script src="javascript/teacher/ManageRecording.js"></script> -->
+<!-- <script src="javascript/teacher/StudentActivities.js"></script>
+<script src="javascript/teacher/ManagePlaylist.js"></script> -->
+
+<script src="javascript/teacherController.js"></script>
+
+
+<link rel="stylesheet" href="css/teacher.css"/> 
+<link rel="stylesheet" href="css/progressbar.css"/>
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="bootstrap/fonts/css/font-awesome.min.css"/>
+
+<style>
+    
+    
+ input[type=radio] {
+    margin-top:10px;
+    margin-right:10px;
+    margin-bottom:5px;
+    margin-left:5px;
+    font-size: 11px;
+ }
+ input[type=checkbox] {
+     margin-top:10px;
+    margin-right:10px;
+    margin-bottom:5px;
+    margin-left:3px;
+    font-size:11px;
+ }
+ .playlist_class{
+      padding-inline-start: 0px;
+ }
+
+.image-class{
+  display:inline-block;
+}
+img{
+  width:43px;
+  height:46px;
+  float:right;
+
+}
+.img1{
+  width:43px;
+  height:46px;
+  
+
+}
+.play_pause_class{
+  width:50px;
+  height:50px;
+
+}
+
+.no_display{
+display:none;
+}
+
+.myClass {
+       visibility: hidden
+    }
+    
+    
+    
+   @media ( min-width : 768px) and (max-width: 1200px) {
+     .blue{
+     cont-size:9px;
+     }
+      .green{
+     cont-size:9px;
+     }
+     input[type=radio] {
+    margin-top:10px;
+    margin-right:10px;
+    margin-bottom:5px;
+    margin-left:5px;
+    font-size: 9px;
+    
+ }
+.color1{
+    
+    
+font-size:9px;
+}
+ul{
+ font-size: 12px;
+}
+img{
+  width:40px;
+  height:30px;
+  float:right;
+
+}
+img1{
+  width:40px;
+  height:30px;
+  float:right;
+  
+
+}
+
+}
+
+.btn-group button {
+display: block;
+}
+.btn-group button:not(:last-child) {
+  border-bottom: none; /* Prevent double borders */
+}
+
+.select_class {
+  /* for Firefox */
+  -moz-appearance: none;
+  /* for Chrome */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+
+</style>
+
+</head>
+
+<body ng-controller="teacherController" ng-init="doOnLoad()">
+
+<div id="mynav">
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Hitham</a>
+    </div>
+   
+    <ul class="nav navbar-nav navbar-right">
+    	<!-- <li><a href="#playlistProfileForm"  data-toggle="modal" style ="text-decoration: none;border:1px; border-radius: 10px; margin-top: 5px; background-color: SlateBlue; float:left; color: white; padding: 10px 25px; text-align: center; text-decoration: none;	display: inline-block">Create PlayList</a></li>
+    	<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+	  	<li><a href="#recordingProfileForm" onclick="getSongList()"  data-toggle="modal" style ="text-decoration: none; float:right; border:1px; margin-top: 5px; border-radius: 10px; margin-right: 100px; background-color: SlateBlue; color: white; padding: 10px 25px; text-align: center; text-decoration: none;display: inline-block">Create Recording</a></li> -->
+        <li><a href="#" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
+      </ul>
+  </div>
+</nav>
+            <!-- <div class="col-md-12" style="background-color:blue;">
+                <div class="col-md-5"></div>
+
+                <div class="col-md-2">
+                    <h3 style="text-align: center;color:white;"><b>Hitham</b></h3>
+                </div>
+
+                <div class="col-md-1"></div>
+
+                <div class="col-md-2 pull-right">
+                    
+                    <button type="button" ng-click="logout()" class="btn btn-danger" style="margin-top:10px;">Logout</button>
+                </div>
+
+            </div> -->
+            
+
+
+</div>
+
+<div class="container">
+
+    <div class="page-header" style="border-width: 2px; margin-left:150px; margin-right:215px;">
+
+      
+      <div class="container" style="width:inherit;height: 100%; min-height: 100%;">
+        <div class="row" style="position: relative; height: 100%; min-height: 100%;" >
+            <div class="col-xs-10" style="position: relative; height: 100%; min-height: 100%;">
+               <!--  <div id="role" style="position: relative; height: 100%; min-height: 100%; margin-top: 6px;"></div> -->
+            </div>
+            <div class="col-xs-2" >
+              <div class="pull-right"></div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+    <div class="row">
+      
+      <div class="col-md-12" style="margin-left:0px;">
+        <h4 id="role">Teacher : {{teacher}}</h4>
+
+          <div class="panel with-nav-tabs panel-default" style="border-width: 2px;">
+
+              <div class="panel-heading">
+                        
+                  <ul class="nav nav-tabs nav-justified">
+             
+                      <li class="active"><a href="#StudentAssignment" data-toggle="tab"><b class="sub_heading">Students</b>
+
+                          
+                             
+                        </ul>
+                </div>
+
+    <div class="panel-body">
+
+        
+        <button type="button" class="btn btn-info"  style="background-color:#0699ad;"  data-toggle="modal" data-target="#playlist_Modal" ng-show="student" title="Create new play list">
+          <span class="glyphicon glyphicon-plus"></span>New Playlist</button>
+        <button type="button"  class="btn btn-info"  style="background-color:#0699ad;" data-toggle="modal" data-target="#song_Modal" ng-show="student" title="Create new play song"><span class="glyphicon glyphicon-plus"></span>New Recording</button>
+
+
+  <button type="button" class="btn btn-info"  style="background-color:#0699ad;" data-toggle="modal" data-target="#Studentactivity_Modal" ng-show="student" title="Display student activities"><span class="glyphicon glyphicon-info-sign"></span>Activity</button>
+  <button type="button" class="btn btn-info"  style="background-color:#0699ad;" ng-click="visualPage()" ng-show="student" title="Display student visual"><span class="glyphicon glyphicon-eye-open"></span>My students analysis</button>
+        
+
+        <div class="tab-content">
+          <ul class="nav  nav-justified">
+                 
+              <li class="active"></b>
+                             </a>
+
+                  <ul style="list-style: none;">
+                      <li class="li_class green" style="font-weight:bold;margin-left:1px;" ng-show="student">My students</li>
+                                    
+                    <ul style="list-style:none;border:2px solid black;" ng-show="student" class="fixed_size1 padding_class">
+                                           
+                              <form action="">
+                                 
+                                  <div   class="options ng-cloak" ng-repeat = "(key, value) in mystudent track by $index" id="parentId">
+                                 <li style="border:1px solid black;padding-top:5px;padding-bottom:5px;background-color:#cbdaf2;">
+                              
+								 <label style="display:block;cursor: pointer;"> <input type="radio" class="mystudents_radio" name="showHideExample" ng-model="id1" value = "{{selected_student[key]}}" ng-init="id1 = selected_student[0]" ng-click="selected_mystudent(selected_student[key])"><span class="color1">{{value}}</span>
+								</label> 
+								
+								<!-- <a href="#" class="mystudents_radio" name="showHideExample" ng-model="id1" value = "{{selected_student[key]}}" ng-init="id1 = selected_student[0]" ng-click="selected_mystudent(selected_student[key])"><span class="color1">{{value}}</span>
+								</a -->
+								
+								</li>
+							</div>
+                               
+                              </form>
+                                        
+                          </ul>
+                                    
+                          <br>
+                          
+                                    
+                      <li class="li_class blue" ng-show="student"><button  class="button_style_class"><span class="blue">Other students</span></button></li>
+
+                      <ul style="list-style:none;border:2px solid black;" ng-show="student" class="fixed_size1 padding_class">
+
+                          <form action="">
+                            <div id="other_student_container" class="options ng-cloak" ng-repeat = "(key, value) in filtered_student track by $index">
+                             <li style="border:1px solid black;padding-top:5px;padding-bottom:5px;background-color:#cbdaf2;">
+                            <label style="display:block;cursor: pointer;"> <input class="other_students_radio" type="radio" style="border:1px solid black;" name="other_student1"  ng-click="other_students(filtered_student_id [key])"><span class="color2">{{value}}</span></label>
+                           </li> 
+                           
+                           </div>
+                            </form>
+                                        
+                        </ul>
+                </ul>
+            </li>
+              
+            <li ng-show="student"><b class="sub_heading"></b></a>
+                            
+
+                         <ul style="list-style: none;">
+                            
+                            <li class="li_class green" style="font-weight:bold;" >Assigned playlists</li>
+                                
+                            <ul style="list-style:none;border:2px solid black;" class="playlist_class fixed_size">
+
+                                <form action="" id="myform">
+
+                                  <div class="mystudent_playlist padding_class ng-cloak" ng-repeat = "(key, value) in current_student_playlist track by $index">
+                                  <li style="border:1px solid black;" ng-style="{'background-color': '{{playlist_color[key]}}'}">
+                                    
+                                    
+                                     <!--  <button class="button  btn-warning button1" style="float:right;margin-top:10px;" ng-click="deleteplaylist(current_student_playlist[key],playlist[key])"><span class="glyphicon glyphicon-minus"></span></button> -->
+                                      <div class="btn-group" style="float:right;">
+                                       <button type="button" ng-hide="hide_btn" class="button  btn-warning button1  mystudent_bottons CompareButton"   ng-click="deletePlaylistStudentMapping(playlist[key],current_student_playlist[key])" title="Remove this play list"><span  class="glyphicon glyphicon-minus mystudent_bottons CompareButton"></span></button>
+                                      
+                                      <button type="button" ng-hide="hide_btn" class="button  btn-warning button1 mystudent_bottons"  data-toggle="modal" data-target="#playlistEditForm" ng-click="editplaylist(playlist[key],current_student_playlist[key],playlist_color[key],playlist_image[key])" title="Edit this play list"><span class="glyphicon glyphicon-edit"></span></button>
+                                     </div>
+                                     <label class="big" style="width:200px;cursor: pointer;"><input class="assigned_radio" type="radio" name="Playlist1" ng-model="id" value = "{{playlist[key]}}" ng-init="id = playlist[0]"ng-click="selected_playlist(playlist[key])"><span class="color1">{{value}}</span></label>
+                                   <!--  <img ng-src="{{playlist_image[key]}}" alt="icon" class="alignnone size-full wp-image-156"/>  -->
+                                    <img ng-src="{{playlist_image[key]}}" alt="icon" class="alignnone size-full wp-image-156"/> 
+                                    <br><br>
+                                  
+                                 <!--  <p class="text_class" style="visibility:hidden;">{{composer[key]}}</p> -->
+                                 <!-- <p class="text_class" style="width:10px;visibility:hidden;">ABCD</p> -->
+                                </li>
+                                </div>
+                                
+                                
+                                <!-- <div style="display:none;" class="otherstudent_playlist padding_class ng-cloak" ng-repeat = "(key, value) in current_student_playlist">
+                                  <li style="border:1px solid black;" ng-style="{'background-color': '{{playlist_color[key]}}'}">
+                                    
+                                    
+                                      <button class="button  btn-warning button1" style="float:right;margin-top:10px;" ng-click="deleteplaylist(current_student_playlist[key],playlist[key])"><span class="glyphicon glyphicon-minus"></span></button>
+                                       <button class="button  btn-warning button1" style="float:right;margin-top:10px;" ng-click="deletePlaylistStudentMapping(playlist[key])"><span class="glyphicon glyphicon-minus"></span></button>
+                                      <button type="button" class="button  btn-warning button1" style="float:right;margin-top:10px;" data-toggle="modal" data-target="#playlistEditForm" ng-click="editplaylist(playlist[key],current_student_playlist[key],playlist_color[key],playlist_image[key])"><span class="glyphicon glyphicon-edit"></span></button>
+                                      <input type="radio" name="Playlist1" value="Playlist1" ng-model="id" value = "{{playlist[key]}}" ng-click="selected_playlist(playlist[key])"><span class="color1">{{value}}</span>
+                                    <img ng-src="{{playlist_image[key]}}" alt="icon" class="alignnone size-full wp-image-156"/>
+                                    
+                                  
+                                  <p class="text_class" style="visibility:hidden;">{{composer[key]}}</p>
+                                 <p class="text_class" style="width:25px;visibility:hidden;">ABCD</p>
+                                </li>
+                                </div> -->
+
+                                </form>
+
+                             </ul>  
+                              <br>
+                                    
+                              <li class="li_class blue"><button class="button_style_class"><span class="blue">Other playlists</span></button></li>
+
+                              <ul style="list-style:none;border:2px solid black;" ng-show="student" class="playlist_class fixed_size">
+                                  <form action="">
+
+                                    <div class="padding_class" ng-repeat = "(key, value) in other_playlist track by $index">
+                                    <li style="border:1px solid black;" ng-style="{'background-color': '{{other_playlist_color[key]}}'}">
+                                    <button type="button" ng-hide="hide_btn" class="button  btn-success button1" style="float:right;margin-top:10px;" ng-click="createPlaylistStudentMapping(other_playlist_id[key])" title="Assign this play list to the selected student"><span class="glyphicon glyphicon-plus"></span></button>
+                                    <img ng-src="{{other_playlist_image[key]}}" alt="icon" class="alignnone size-full wp-image-156" />
+                                    <label style="display:block;cursor: pointer;"><input class="other_radio" type="radio"  name="other_Playlist1"  ng-click="selected_playlist(other_playlist_id[key])"><span class="color2">{{value}}</span></label><br>
+                                    <!-- <p class="text_class" style="width:25px;visibility:hidden;">{{composer[key]}}</p> -->
+                                    <!-- <p class="text_class" style="width:25px;visibility:hidden;">ABCD</p> -->
+                                   
+                                    
+                                    </li></div>
+                                    
+                                  </form>
+
+                                            
+                                </ul>
+
+                                </ul> 
+
+                            </li>
+                            
+                            <li ng-show="student"><b class="sub_heading"></b>
+                            </a>
+
+                              <ul style="list-style: none;">
+
+                              <li class="li_class green" style="font-weight:bold;">Assigned songs</li>
+
+                              <ul style="list-style: none;border:2px solid black;" class="playlist_class fixed_size">
+
+                                  <form action="">
+
+                                    <div class="padding_class" ng-repeat = "(key, value) in songs track by $index">
+                                    <li style="border:1px solid black;" ng-style="{'background-color': '{{song_color[key]}}'}">
+                                    <div class="btn-group no_data_hide" style="float:right;">
+                                    <button type="button"  ng-hide="hide_btn" class="button btn-warning button1"  ng-click="deletePlaylistRecordingMapping(songs[key],recording_id[key])" title="Remove this song from the selected play list"><span class="glyphicon glyphicon-minus"></span></button>
+                                    <button type="button" ng-hide="hide_btn" class="button  btn-warning button1"  data-toggle="modal" data-target="#recordingEditForm" ng-click="editRecording(recording_id[key],songs[key],song_color[key],song_img[key],assigned_song_id[key],assigned_song_name[key],assigned_song_composer[key])"><span class="glyphicon glyphicon-edit"></span></button>
+                                    </div>
+                                    <img class="img1" ng-src="{{song_img[key]}}" alt="icon" class="alignnone size-full wp-image-156" />
+                                    <label style="width:200px;"><input type="radio" name="songs1" value="songs1" style="display:none;"><span class="color1">{{value}}</span></label>
+                                    <!-- <p class="text_class" style="width:25px;visibility:hidden;">{{song_img[key]}}</p> -->
+                                    
+                                    <p class="text_class no_data_hide" style="width:25px;">{{assigned_song_raaga[key]}},{{assigned_song_taal[key]}},{{assigned_song_singer[key]}}</p>
+                                    
+                                    </li>
+                                    </div>
+
+
+                                    <!-- <div style="text-align:center;padding-top:5px;padding-bottom:5px;">
+                                    <button type="button"  class="btn btn-warning">Remove</button></div> -->
+                                  </form>
+                                            
+                              </ul>
+                                        
+                               <br>
+                               <br>
+
+                                <li class="li_class blue" style="padding-top:10px;padding-bottom:10;"><button class="button_style_class" ><span class="blue">Other songs</span></button></li>
+
+                                <ul style="list-style:none;border:2px solid black;" ng-show="student" class="playlist_class fixed_size">
+
+                                  <form action="">
+
+                                    <div class="padding_class" ng-repeat = "(key, value) in other_songs track by $index">
+                                    <li style="border:1px solid black;" ng-style="{'background-color': '{{other_song_color[key]}}'}">
+                                    
+                                    <button type="button" ng-hide="hide_btn" class="button  btn-success button1  mystudent_bottons" style="float:right;margin-top:10px;" ng-click="createPlaylistRecordingMapping(other_recording_id[key])" title="Assign this song to the selected play list"><span class="glyphicon glyphicon-plus mystudent_bottons"></span></button>
+                                     <!-- <button class="button  btn-success button1" style="float:right;margin-top:10px;"><span class="glyphicon glyphicon-edit"></span></button> -->
+                                     <!-- <button class="button  btn-warning button1" style="float:right;margin-top:10px;"><span class="glyphicon glyphicon-plus"></span></button>  -->
+                                    <img  ng-src="{{other_song_img[key]}}" class ="img1" alt="icon" class="alignnone size-full wp-image-156" />
+                                    <input type="radio" name="songs1" value="songs1" style="display:none;"><span class="color1">{{value}}</span><br>
+                                    <!-- <p class="text_class" style="width:25px;visibility:hidden;">{{other_song_img[key]}}</p> -->
+                                    <p class="text_class" style="width:25px;visibility:hidden;">ABCD</p>
+                                    
+                                    </li>
+                                    </div>
+
+                                  </form>
+
+                                            
+                                </ul>
+
+                            </ul> 
+
+                            </li>
+
+                            
+
+
+                        </ul>
+
+                </div><!--tab content close -->
+              </div> <!--panel body close -->
+              
+          </div> <!--panel nav close -->
+      </div> <!--column close -->
+      
+   </div><!--row close -->
+
+</div> <!--container close -->
+
+
+           
+     <!--Create new playlist modal-->                        
+<div class="modal fade" id="playlist_Modal" role="dialog">
+<div class="modal-dialog">
+ <!--  <form  action="http://localhost:8080/hitham/webapi/upload2/upload21" class="form-horizontal" method="post" enctype="multipart/form-data"> -->
+<form  class="form-horizontal"  enctype="multipart/form-data"> 
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close"  aria-hidden="true" ng-click="close()">&times;</button>
+        <h4 class="modal-title">New Playlist</h4>
+      </div>
+
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+        <div class="form-group">
+        <label class="control-label col-sm-3">Name</label>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" style="width:250px" name="playlistName" id="playlistName"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Color</label>
+        <div class="col-sm-7">
+          <input type="color" class="form-control" style="width:250px" name="playlistColor" id="playlistColor"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Picture URL</label>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" style="width:250px" ng-model = "picture" class="form-control" style="width:250px" ng-keyup="playlist_pic()" name="playlistPicURL" id="playlistPicURL"/>
+        </div>
+      </div>
+      <h5 style="text-align:center;font-weight:900;">Or</h5>
+       <div class="form-group">
+        <label class="control-label col-sm-3"></label>
+        <div class="col-sm-7">
+         <!--  <input type="file" name="file" class="form-control" style="width:250px"  id="fileForm"/> -->
+          
+         <!--  <progress max=100></progress>
+    <span id="progress_percent">0</span>% -->
+
+    <p><input type="file" name="upload_file" id="fileForm" ng-model = "image" ng-click="upload_pic()"/></p>
+        </div>
+      </div>
+    
+           
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+    <!--<button type="button" class="btn btn-primary"  ng-click="playlistProfileSubmit()" id="btn1" >Save</button> 
+        <button type="submit" class="btn btn-primary"  id="btn1" >Save</button>-->
+        <button type="button" class="btn btn-primary" id="upload_btn">Submit</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+
+     </form>
+   </div>
+
+  </div><!-- /.modal-dialog -->
+
+
+
+                            
+<!--Create new song modal-->
+
+<div class="modal fade" id="song_Modal" role="dialog">
+<div class="modal-dialog">
+  <form class="form-horizontal">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()"  aria-hidden="true">&times;</button>
+        <h4 class="modal-title">New Recording</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+   		<div class="form-group">
+			<label class="control-label col-sm-3">Song Name</label>
+			<div class="col-sm-7">
+				<select id="songlist">
+                   
+                </select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Recording Name</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" ng-model="default_recording" value="{{default_recording}}" style="width:250px;" name="recordingName" id="recordingName"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Color</label>
+			<div class="col-sm-7">
+				 <input type="color" name="recordingColor" id="recordingColor1" value="#ff0000" style="width:150px;height:30px">
+			</div>
+		</div>
+		
+		<div class="form-group">
+        <label class="control-label col-sm-3">Picture URL</label>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" style="width:250px" ng-model = "picture" class="form-control" style="width:250px" ng-keyup="playlist_pic()" name="playlistPicURL" id="recordingPicURL1"/>
+        </div>
+      </div>
+      <h5 style="text-align:center;font-weight:900;">Or</h5>
+       <div class="form-group">
+        <label class="control-label col-sm-3"></label>
+        <div class="col-sm-7">
+         <!--  <input type="file" name="file" class="form-control" style="width:250px"  id="fileForm"/> -->
+        
+    <p><input type="file" name="upload_file1" id="fileForm" class="fileForm_class" ng-model = "image" ng-click="upload_pic()"/></p>
+        </div>
+      </div>
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+       <!--  <button type="button" class="btn btn-primary" id="upload_record" >Submit</button> -->
+        <a href="#" class="btn btn-primary"  id = "upload_record"  value="Login" onclick="upload_record()">Submit</a>
+       <!-- <button type="button" class="btn btn-primary"  ng-click="recordingProfileSubmit()" id="recordingCreateSubmit" >Save</button> -->
+      </div>
+
+    </div><!-- /.modal-content -->
+
+     </form>
+     
+   </div>
+  </div><!-- /.modal-dialog -->
+
+  <!--Create new song modal-->
+  
+   
+  <!-- playlist edit form -->
+<div id="playlistEditForm" class="modal fade" role="dialog" style="width:100%;">
+  <div class="modal-dialog" id="playlistmodal">
+  <form class="form-horizontal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()"  aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Edit playlist details</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+      	<div class="form-group">
+			<label class="control-label col-sm-3">playlist Name	</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="playlistName2" id="playlistName2"/>
+			</div>
+		</div>
+		<div class="form-group">
+				<label class="control-label col-sm-3">Color</label>
+				<div class="col-sm-7">
+					<input type="color" class="form-control" style="width:250px" name="playlistColor2" id="playlistColor2"/>
+					<input type="hidden"  name="student_id_edit" id="student_id_edit">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-3">Picture URL</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" style="width:250px" name="playlistPicURL2" id="playlistPicURL2"/>
+				</div>
+			</div>
+      <h5 style="text-align:center;font-weight:900;">Or</h5>
+       <div class="form-group">
+        <label class="control-label col-sm-3"></label>
+        <div class="col-sm-7">
+         <!--  <input type="file" name="file" class="form-control" style="width:250px"  id="fileForm"/> -->
+        
+    <p><input type="file" name="upload_editfile1" id="fileForm" class="fileForm_class" ng-model = "image" ng-click="upload_pic()"/></p>
+        </div>
+      </div>
+           
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+        
+        <a href="#" class="btn btn-primary"  id = "upload_record1"  value="Login1" onclick="upload_editPlaylist()">Submit</a>
+       <!-- <button type="button" class="btn btn-primary" ng-click="saveEdit()" id="btn2" >Save</button>-->
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Recording edit form -->
+<div id="recordingEditForm" class="modal fade">
+  <div class="modal-dialog" id="playlistmodal">
+  <form class="form-horizontal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()"  aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Edit recording details</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+      	<div class="form-group">
+			<label class="control-label col-sm-3">Song Name</label>
+			<div class="col-sm-7">
+				 <select id="songlist2">
+                   
+                </select> 
+                 <!-- <textarea id="songlist2" ng-mdel="song_name" disabled=true>{{song_name}}</textarea> -->
+                <p ng-mdel="song_composer">{{song_composer}}</p>
+			</div>
+		</div>
+      	<div class="form-group">
+			<label class="control-label col-sm-3">Recording Name</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="recordingName2" id="recordingName2"/>
+				<input type="hidden"  name="edit_record_id" id="edit_record_id">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Color</label>
+			<div class="col-sm-7">
+				<input type="color" class="form-control" value="#ff0000" style="width:250px" name="recordingColor2" id="recordingColor2"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Pic URL</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="recordingPicURL2" id="recordingPicURL2"/>
+			</div>
+		</div>
+		<h5 style="text-align:center;font-weight:900;">Or</h5>
+       <div class="form-group">
+        <label class="control-label col-sm-3"></label>
+        <div class="col-sm-7">
+         <!--  <input type="file" name="file" class="form-control" style="width:250px"  id="fileForm"/> -->
+        
+       <p><input type="file" name="upload_editrecord1" id="fileForm" class="fileForm_class" ng-model = "image" ng-click="upload_pic()"/></p>
+        </div>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+        <!-- <button type="button" class="btn btn-primary"  ng-click="saveEditedRecording()" id="btn2" >Save</button> -->
+         <a href="#" class="btn btn-primary"  id = "upload_record1"  value="Login1" onclick="upload_editRecord()">Submit</a>
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+  
+
+
+<div id="Studentactivity_Modal" class="modal fade">
+<div class="modal-dialog modal-lg">
+
+  <form class="form-horizontal">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"  aria-hidden="true" ng-click="close()">&times;</button>
+        <h4 class="modal-title">Activity</h4>
+      </div>
+
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+
+        
+
+                            <div class="row">
+
+                              <div class="col-md-12">
+
+                                <div class="col-md-4" style="text-align:center;">
+                                  <span style="padding-right:20px;"><b>Select Student ID :</b></span>
+                                  <select id="student_select" ng-model="mystudent1" ng-change="student_select_change()">
+                                  </select>
+                                </div>
+
+                                <div class="col-md-4"></div>
+                                <div class="col-md-4"></div>
+                                
+                              </div>
+
+                            </div>
+
+                              <div class="row">
+                              
+                              <div class="col-md-12">
+    
+                            <div class="col-md-4" style="text-align:center;">
+                              <label>Show Student Name :
+                              <input type="checkbox" id="namecheckbox" ng-model="mystudent12" ng-change="student_select_change()" /></label>
+                            </div>
+                            
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4"></div>
+                            
+                          </div>
+                          
+                          </div>
+    
+   
+    <div class="row">
+      <div class="col-md-12" id="activity_Display" style="display:none">
+      
+        <table class="table" id="activity_Display_table">
+          
+            <thead id="activity_Display_heading"></thead>
+            <tbody  id="activity_Display_body"></tbody>
+        </table>
+        
+        <div>
+        <button type="button"  ng-model="button123" ng-click="downloadData()">Download</button>
+          <div id="dummy"></div>
+        </div>
+        
+      </div>
+      
+      <div id="no_activity_display" style="display:block">No Activities</div>
+       </div>
+
+       <div class="row">
+      <div class="col-md-12">
+        
+      <div class="col-md-4" style="text-align:center;">
+       <!--  <b>No Activities</b> -->
+      </div>
+      <div class="col-md-4"></div>
+      <div class="col-md-4"></div>
+    </div>
+  </div>
+
+        
+     </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close()">Close</button>
+        <!-- <button type="button" class="btn btn-primary"  ng-click="songProfileSubmit()" id="btn1" >Save</button> -->
+      </div>
+
+    </div><!-- /.modal-content -->
+
+     </form>
+     
+   </div>
+  </div><!-- /.modal-dialog -->
+ 
+  
+  
+
+
+</body>
+</html>

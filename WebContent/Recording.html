@@ -1,0 +1,105 @@
+
+<div class="row" style="padding-top:0px">
+
+<div class="col-sm-12" >
+<a href="#recordingProfileForm"  data-toggle="modal" onclick="getSongList();">Create New Recording</a>
+	<div style = "overflow-y: scroll ; height:450px; padding-top:10px; ">
+		<table id="recordingList" class="display">
+		</table>
+	</div>
+
+</div>
+</div>
+
+<div id="recordingProfileForm" class="modal fade">
+  <div class="modal-dialog">
+  <form class="form-horizontal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"  aria-hidden="true">×</button>
+        <h4 class="modal-title">New Recording</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+   		<div class="form-group">
+			<label class="control-label col-sm-3">Song Name</label>
+			<div class="col-sm-7">
+				<select id="songlist">
+                   
+                </select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Recording Name</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="recordingName" id="recordingName"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Color</label>
+			<div class="col-sm-7">
+				 <input type="color" name="recordingColor" id="recordingColor" value="#ff0000" style="width:150px;height:30px">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Pic URL</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="recordingPicURL" id="recordingPicURL"/>
+			</div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"  onclick="recordingProfileSubmit()" id="recordingCreateSubmit" >Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- Recording edit form -->
+<div id="recordingEditForm" class="modal fade">
+  <div class="modal-dialog" id="playlistmodal">
+  <form class="form-horizontal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"  aria-hidden="true">×</button>
+        <h4 class="modal-title">Edit recording details</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+      	<div class="form-group">
+			<label class="control-label col-sm-3">Song Name</label>
+			<div class="col-sm-7">
+				<select id="songlist2">
+                   
+                </select>
+			</div>
+		</div>
+      	<div class="form-group">
+			<label class="control-label col-sm-3">Recording Name</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="recordingName2" id="recordingName2"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Color</label>
+			<div class="col-sm-7">
+				<input type="color" class="form-control" value="#ff0000" style="width:250px" name="recordingColor2" id="recordingColor2"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-3">Pic URL</label>
+			<div class="col-sm-7">
+				<input type="text" class="form-control" style="width:250px" name="recordingPicURL2" id="recordingPicURL2"/>
+			</div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"  onclick="saveEditedRecording()" id="btn2" >Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+

@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="javascript/javascript_visual/NewManageRecordings.js"></script>
+<script src="javascript/javascript_visual/NewTeacher.js"></script>
+<script src="javascript/javascript_visual/Newjscolor.js"></script>
+<script src="javascript/javascript_visual/jquery-3.2.1.js"></script>
+<script src="javascript/javascript_visual/NewManagePlaylist.js"></script>
+</head>
+    
+ <style>
+ 
+ td, th {
+  text-align:left;
+  cursor : pointer;
+  border-radius: 10px;
+}
+
+.text-center {
+  padding-top:10px;
+}
+
+#main_div {
+  
+  margin-left:10px;
+  margin-right:10px;
+  margin-top:40px;
+  
+}
+
+
+table {
+  font-family:arial, sans-serif;
+  width:80%;
+}
+
+
+#stu_ass {
+  width:15%;
+  float:left;
+  margin-top:7px;
+  height:250px;
+  margin-right:-400px;
+  padding-left:10px;
+}
+
+#stu_not_ass {
+  width:15%;
+  clear:left;
+  height:250px;
+  margin-right:-200px;
+  padding-left:10px;
+  /*margin-top:300px;*/
+}
+
+#play_ass {
+  width:30%;
+  margin-top:-500px;
+  height:250px;
+  margin-left:270px;
+}
+
+#play_not_ass {
+  width:30%;
+  margin:auto;
+  height:250px;
+  margin-left:270px;
+}
+
+#rec_ass {
+  width:45%;
+  height:250px;
+  float:right;
+  margin-top:-500px;
+  margin-right:-50px;
+  padding-right:170px;
+}
+
+#rec_not_ass {
+  width:45%;
+  height:250px;
+  clear:right;
+  float:right;
+  margin-top:-250px;
+  margin-right:-50px;
+  padding-right:170px;
+}
+
+a{
+    color: Black;
+}
+
+
+
+#rec_name {
+  background-color:Cyan;
+}
+
+#rec_name_not_ass {
+  background-color:Coral;
+}
+
+#rec_name_ass {
+  background-color:Cyan;
+}
+
+
+.fa.fa-plus-circle {
+  float:right;
+  margin-right:20px;
+}
+
+.fa.fa-minus-circle {
+  float:right;
+  margin-right:20px;
+}
+
+.fa.fa-edit {
+  float:right;
+  margin-right:-45px;
+}
+
+.color {
+    background-color: yellow;
+}
+
+   </style>
+    
+</head>
+
+<body>
+
+
+
+<script>
+
+var student_id,playlist_id,teacher_id;
+
+var uid = localStorage.getItem('teacher_pk');
+
+$(document).ready(function(){
+	
+	$("#play_ass").hide();
+	$("#play_not_ass").hide();
+	$("#rec_ass").hide();
+	$("#rec_not_ass").hide();
+	var uri="webapi/teacher/fetchAssignedStudents/"+uid;
+	console.log(uri);
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	  var strlinks="<table class=\"table\"><thead><tr><th>Students Assigned</th></tr></thead><tbody>"
+	  for(var i=0;i<n;i++){
+	   var name=data[i].student_name;
+	   var id=data[i].student_pk;
+	   //strlinks+='<tr><td>'+name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="'+id+'" onclick="myfunction(this.id)">View</button></td></tr>';
+	  	  strlinks+='<tr><td id="'+id+'" onclick="myfunction(this.id)">'+name+'</td><tr>'; 
+	  }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("stu_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+});
+	uri="webapi/teacher/fetchNotAssignedStudents/"+uid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	  // var strlinks='<table><tr><th>Students Not Assigned</th></tr>';
+	   var strlinks="<table class=\"table\"><thead><tr><th>Students Not Assigned</th></tr></thead><tbody>";
+	   for(var i=0;i<n;i++){
+	   var name=data[i].student_name;
+	   var id=data[i].student_pk;
+	 // strlinks+='<tr><td>'+name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="'+id+'" onclick="myfunction6(this.id)">View</button></td></tr>';
+	   strlinks+='<tr><td id="'+id+'" onclick="myfunction6(this.id)">'+name+'</td><tr>'; 
+	   }
+	   	strlinks+='<table>';
+	   	document.getElementById("stu_not_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+}); 
+	
+});	
+
+
+
+function myfunction6(sid){
+	$("#rec_ass").hide();
+	$("#rec_not_ass").hide();
+	var uri="webapi/playlist/assignedForStudent/"+sid;
+	student_id=sid;
+	console.log(uri);
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	   console.log(sid);
+	   var strlinks="<table class=\"table\"><thead><tr><th>Playlist Assigned</th></tr></thead><tbody>";
+	   for(var i=0;i<n;i++){
+	   var name=data[i].playlist_name;
+	   var id=data[i].playlist_id;
+	   var tid=data[i].teacher_pk;
+	   strlinks+='<tr><td id="'+id+'" onclick="myfunction7(this.id)">'+name+'</td><tr>'; 	
+	  // strlinks+='<tr><td>'+name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="'+id+'" onclick="myfunction7(this.id)">View</button></td></tr>';
+	   }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("play_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	uri="webapi/playlist/NotAssignedForStudent/"+sid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	   var strlinks="<table class=\"table\"><thead><tr><th>Playlist Not Assigned</th></tr></thead><tbody>";
+	   for(var i=0;i<n;i++){
+	   var name=data[i].playlist_name;
+	   var id=data[i].playlist_id;
+	   var tid=data[i].teacher_pk;
+	   //console.log("Teacher id comp "+tid+" "+uid);
+	  // if(uid==tid)
+	   	//	strlinks+='<tr><td>'+name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="'+id+'" onclick="myfunction2(this.id)">View</button> <button id="'+id+'" onclick="myfunction3(this.id)">Add</button></td></tr>';
+	   //else
+	  //  strlinks+='<tr><td>'+name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="'+id+'" onclick="myfunction7(this.id)">View</button></td></tr>';
+	   strlinks+='<tr><td id="'+id+'" onclick="myfunction7(this.id)">'+name+'</td><tr>'; 	
+	   }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("play_not_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	$("#play_ass").show();
+	$("#play_not_ass").show();
+}
+
+function changeColor(o){
+	 o.style.backgroundColor="red";
+}
+
+function myfunction(sid){
+	
+	
+	$("#rec_ass").hide();
+	$("#rec_not_ass").hide();
+	var uri="webapi/playlist/assignedForStudent/"+sid;
+	console.log("URL called "+uri);
+	
+	student_id=sid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	   console.log(sid);
+	   //var strlinks="<table class=\"table\"><thead><tr><th>Playlist Assigned</th><th>Color</th><th>Image</th></tr></thead><tbody>";
+	   var strlinks="<table class=\"table\"><thead><tr><th>Playlist Assigned</th></tr></thead><tbody>";
+	   for(var i=0;i<n;i++){
+	   var name=data[i].playlist_name;
+	   var id=data[i].playlist_id;
+	   var tid=data[i].teacher_pk;
+	   var color=data[i].playlist_color;
+	   var image=data[i].playlist_pic_url;
+	   if(uid==tid)
+	   	strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'"  onclick="myfunction2(this.id)">'+name+'<i id="'+id+'"class="fa fa-minus-circle" style="font-size:18px;" onclick="myfunction1(this.id)"></i><a id="'+id+'"href="#playlistEditForm" data-toggle="modal" onclick="fillplaylist(this.id)"><i id="'+id+'"class="fa fa-edit" style="font-size:18px;"></i></a></td><td><img src="'+image+'" height="30" width="50"></img></td></tr>';
+	   else
+		strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'"  onclick="myfunction2(this.id)">'+name+'<i id="'+id+'"class="fa fa-minus-circle" style="font-size:18px;" onclick="myfunction1(this.id)"></i><a id="'+id+'"href="#playlistEditForm" data-toggle="modal" onclick="fillplaylist(this.id)"><td><img src="'+image+'" height="30" width="50"></img></td></tr>';
+	   }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("play_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	uri="webapi/playlist/NotAssignedForStudent/"+sid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	   var strlinks="<table class=\"table\"><thead><tr><th>Playlist Not Assigned</th></tr></thead><tbody>";
+	   for(var i=0;i<n;i++){
+	   var name=data[i].playlist_name;
+	   var id=data[i].playlist_id;
+	   var tid=data[i].teacher_pk;
+	   var color=data[i].playlist_color;
+	   var image=data[i].playlist_pic_url;
+	//   strlinks+='<tr><td id="'+id+'" onclick="myfunction2(this.id)">'+name+'<i id="'+id+'"class="fa fa-plus-circle" style="font-size:18px;" onclick="myfunction3(this.id)"></i></td></tr>';
+	  // strlinks+='<tr><td id="'+id+'" onclick="myfunction2(this.id)">'+name+'<i id="'+id+'"class="fa fa-plus-circle" style="font-size:18px;" onclick="myfunction3(this.id)"></i></td><td bgcolor="'+color+'"></td><td><img src="'+image+'" height="30" width="50"></img></td></tr>';
+	 //  strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'" onclick="myfunction2(this.id)">'+name+'<i id="'+id+'"class="fa fa-plus-circle" style="font-size:18px;" onclick="myfunction3(this.id)"></i></td><td><img src="'+image+'" height="30" width="50"></img></td></tr>';
+	   if(uid==tid)
+		   	strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'"  onclick="myfunction2(this.id)">'+name+'<i id="'+id+'"class="fa fa-plus-circle" style="font-size:18px;" onclick="myfunction3(this.id)"></i><a id="'+id+'"href="#playlistEditForm" data-toggle="modal" onclick="fillplaylist(this.id)"><i id="'+id+'"class="fa fa-edit" style="font-size:18px;"></i></a></td><td><img src="'+image+'" height="30" width="50"></img></td></tr>';
+		else
+			strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'"  onclick="myfunction2(this.id)">'+name+'<i id="'+id+'"class="fa fa-plus-circle" style="font-size:18px;" onclick="myfunction3(this.id)"></i><a id="'+id+'"href="#playlistEditForm" data-toggle="modal" onclick="fillplaylist(this.id)"><td><img src="'+image+'" height="30" width="50"></img></td></tr>';
+		  }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("play_not_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	
+	$("#play_ass").show();
+	$("#play_not_ass").show();
+}
+
+function myfunction1(pid){
+	var uri="webapi/playlist/RemoveAssignedPlaylist/"+pid+"/"+student_id;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   myfunction(student_id);
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+}
+
+function myfunction3(pid){
+	var uri="webapi/playlist/AddPlaylist/"+pid+"/"+student_id;
+	playlist_id=pid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   myfunction(student_id);
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+}
+
+function myfunction4(rid){
+	var uri="webapi/playlist/DeleteRecording/"+rid+"/"+playlist_id;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   myfunction2(playlist_id);
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+}
+	
+	
+function myfunction7(pid){
+	var uri="webapi/playlist/fetchAssignedRecordings/"+pid;
+	console.log("Infunction7");
+	playlist_id=pid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	var strlinks='<table class="table"><thead><tr><th></th></tr></thead><tbody>';
+	   for(var i=0;i<n;i++){
+	   var name=data[i].recording_name;
+	   var id=data[i].recording_id;
+	   var color=data[i].recording_color;
+	   var recording_pic=data[i].recording_pic_url;
+	   console.log("Color is "+color);
+	   //strlinks+='<tr><td id="'+id+'">'+name+'</td><td bgcolor="'+color+'"></td><td><img src="'+recording_pic+'" height="30" width="50"></img><td></td><td></td></td></tr>';
+	   strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'">'+name+'</td><td><img src="'+recording_pic+'" height="30" width="50"></img></td></tr>';
+	   }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("rec_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	uri="webapi/playlist/MissingRecordingInPlaylists/"+pid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	   console.log("Required function called");
+	  // var strlinks='<table id="NotAssignedRecordings"><tr><th>Recordings Not Assigned</th></tr><tbody>';
+	  var strlinks='<table class="table"><thead><tr><th>Recordings Not Assigned</th></tr></thead><tbody>';
+	   for(var i=0;i<n;i++){
+	   var name=data[i].recording_name;
+	   var id=data[i].recording_id;
+	   var color=data[i].recording_color;
+	   var recording_pic=data[i].recording_pic_url;
+	   console.log("Color is "+color);
+	   //strlinks+='<tr><td id="'+id+'">'+name+'</td><td bgcolor="'+color+'"></td></td><td><img src="'+recording_pic+'" height="30" width="50"></img></td><td></td><td></td></tr>';
+	   strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'">'+name+'</td><td><img src="'+recording_pic+'" height="30" width="50"></img></td></tr>';
+	   }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("rec_not_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	$("#rec_ass").show();
+	$("#rec_not_ass").show();
+}
+	
+	
+	///////////
+	function myfunction2(pid){
+	
+	var uri="webapi/playlist/getTeacherIdOfPlaylist/"+pid;
+	
+	$.ajax({
+	type : "POST",
+	dataType: "json",
+	url:uri,
+	success:function(data){
+	var n=data.length;
+	playlist_id=pid;
+	
+	for(var i=0;i<n;i++){
+	var tid=data[i].teacher_pk;
+	if(tid==uid){
+	uri="webapi/playlist/fetchAssignedRecordings/"+pid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	  // var strlinks+='<table class="table"><thead><tr><th>Recordings Assigned</th><th>Remarks</th><th>Tag(s)</th></tr></thead><tbody>';
+	  	var strlinks='<table class="table"><thead><tr><th>Recordings Assigned</th></tr></thead><tbody>';
+	  for(var i=0;i<n;i++){
+	   var name=data[i].recording_name;
+	   var id=data[i].recording_id;
+	   var color=data[i].recording_color;
+	   var recording_pic=data[i].recording_pic_url;
+	   console.log("Color is "+color);
+	   //strlinks+='<tr><td bgcolor="'+color+'" id="'+id+'" onclick="myfunction4(this.id)">'+name+'<i id="'+id+'"class="fa fa-minus-circle" style="font-size:18px;" onclick="myfunction4(this.id)"></i><i id="'+id+'"class="fa fa-edit" style="font-size:18px;" onclick="myfunction1(this.id)"></i></td><td></td><td></td></tr>';
+	   //strlinks+='<tr><td id="'+id+'">'+name+'<i id="'+id+'"class="fa fa-minus-circle" style="font-size:18px;" onclick="myfunction4(this.id)"></i><a href="#playlistEditForm"  data-toggle="modal"><i id="'+id+'"class="fa fa-edit" style="font-size:18px;"></i></a></td><td bgcolor="'+color+'"></td></td><td><img src="'+recording_pic+'" height="30" width="50"></img></td><td></td><td></td></tr>';
+	   strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'">'+name+'<i id="'+id+'"class="fa fa-minus-circle" style="font-size:18px;" onclick="myfunction4(this.id)"></i><a id="'+id+'" href="#recordingEditForm"  data-toggle="modal" onclick="fillrecording(this.id)"><i id="'+id+'"class="fa fa-edit" style="font-size:18px;"></i></a></td></td><td><img src="'+recording_pic+'" height="30" width="50"></img></td></tr>';
+	   }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("rec_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	uri="webapi/playlist/MissingRecordingInPlaylists/"+pid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	   //var strlinks='<table id="NotAssignedRecordings"><tr><th>Recordings Not Assigned</th></tr><tbody>';
+	   var strlinks='<table class="table"><thead><tr><th>Recordings not Assigned</th></tr></thead><tbody>';
+	   for(var i=0;i<n;i++){
+	   var name=data[i].recording_name;
+	   var id=data[i].recording_id;
+	   var color=data[i].recording_color;
+	   var recording_pic=data[i].recording_pic_url;
+	   console.log("Color is "+color);
+	   //strlinks+='<tr><td id="'+id+'">'+name+'<i id="'+id+'"class="fa fa-plus-circle" style="font-size:18px;" onclick="myfunction5(this.id)"></i></td><td bgcolor="'+color+'"></td></td><td><img src="'+recording_pic+'" height="30" width="50"></img></td><td></td><td></td></tr>';
+	   strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'">'+name+'<i id="'+id+'"class="fa fa-plus-circle" style="font-size:18px;" onclick="myfunction5(this.id)"></i></td></td><td><img src="'+recording_pic+'" height="30" width="50"></img></td></tr>';
+	   }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("rec_not_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	}else{
+	uri="webapi/playlist/fetchAssignedRecordings/"+pid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	  // var strlinks='<table id="AssignedRecordings"><tr><th>Recordings Assigned</th></tr><tbody>';
+	   var strlinks='<table class="table"><thead><tr><th>Recordings Assigned</th></tr></thead><tbody>';
+	   for(var i=0;i<n;i++){
+	   var name=data[i].recording_name;
+	   var id=data[i].recording_id;
+	   var color=data[i].recording_color;
+	   var recording_pic=data[i].recording_pic_url;
+	   console.log("Id is "+id);
+	   //strlinks+='<tr><td>'+name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>';
+	   //strlinks+='<tr><td bgcolor="'+color+'"id="'+id+'">'+name+'<i id="'+id+'"class="fa fa-minus-circle" style="font-size:18px;" onclick="myfunction4(this.id)"></i><i id="'+id+'"class="fa fa-edit" style="font-size:18px;" onclick="myfunction1(this.id)"></i></td><td></td><td></td></tr>';
+	   //strlinks+='<tr><td id="'+id+'">'+name+'</td><td bgcolor="'+color+'"></td></td><td><img src="'+recording_pic+'" height="30" width="50"></img></td><td></td><td></td></tr>';
+	   strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'">'+name+'</td></td><td><img src="'+recording_pic+'" height="30" width="50"></img></td></tr>';
+	   }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("rec_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	uri="webapi/playlist/MissingRecordingInPlaylists/"+pid;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   var n=data.length;
+	  // var strlinks='<table id="NotAssignedRecordings"><tr><th>Recordings Not Assigned</th></tr><tbody>';
+	  	  var strlinks='<table class="table"><thead><tr><th>Recordings Not Assigned</th></tr></thead><tbody>';
+	  for(var i=0;i<n;i++){
+	   var name=data[i].recording_name;
+	   var id=data[i].recording_id;
+	   var color=data[i].recording_color;
+	   var recording_pic=data[i].recording_pic_url;
+	   console.log("Id is "+id);
+	 //  strlinks+='<tr><td bgcolor="'+color+'" id="'+id+'">'+name+'</td><td></td><td></td></tr>';
+	   //strlinks+='<tr><td id="'+id+'">'+name+'</td><td bgcolor="'+color+'"></td></td><td><img src="'+recording_pic+'" height="30" width="50"></img></td><td></td><td></td></tr>';
+	   strlinks+='<tr bgcolor="'+color+'"><td id="'+id+'">'+name+'</td><td><img src="'+recording_pic+'" height="30" width="50"></img></td></tr>';
+	   }
+	   	strlinks+='</tbody><table>';
+	   	document.getElementById("rec_not_ass").innerHTML=strlinks;
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	}
+	}
+	}
+	});
+	
+	$("#rec_ass").show();
+	$("#rec_not_ass").show();
+	
+	}
+	
+	
+	
+	function myfunction5(rid){
+	console.log(rid);
+	var uri="webapi/playlist/AddRecording/"+rid+"/"+playlist_id;
+	$.ajax({ 
+	   type: "POST",
+	   dataType: "json",
+	   url: uri,
+	   success: function(data){
+	   myfunction2(playlist_id);
+	   },
+	   error: function(e) {
+	        console.log(e.message);
+	    }
+	});
+	}
+	
+	function ProfileSubmit() {
+	console.log("IN profile submit");
+	var uri="webapi/playlist/";
+	if(playlist_nameArray.indexOf($('#playlistName').val()) != -1) {
+	alert('Name already Exists');
+	}
+	else {
+	$.ajax({
+	url : uri,
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	data: JSON.stringify({
+	playlist_name:$('#playlistName').val(),
+	playlist_pic_url: $('#playlistPicURL').val() ,
+	playlist_color: $('#playlistColor').val() ,
+	teacher_pk:uid
+	        }),
+	        success: function(data){
+	        }
+	});
+	$('#playlistProfileForm').modal('toggle');
+	myfunction(student_id);
+	//loadplayList();
+	}
+	}
+
+	
+	function deleteplaylist(name,id) {
+	//alert('in edit'+URL+'/webapi/playlist/delete/'+id);
+	if (confirm("Do you want to delete "+name+" ?") == true) {
+	$.ajax({
+	url : URL+'/webapi/playlist/delete/'+id,
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	        success: function(data){
+	        }
+	});
+	    }   	
+	}
+
+	var playlistID;
+	
+	function editplaylist(sid,name,color,url) {
+	playlistID = sid;
+	$('#playlistName2').val(name);
+	$('#playlistColor2').val(color);
+	$('#playlistPicURL2').val(url);
+	document.getElementById('playlistColor2').jscolor.valueElement.style.backgroundColor = HEX_rgb(color);
+	
+	}
+
+	function saveEditedplaylist()  {
+//	alert('in edit'+URL+'/webapi/playlist/edit/'+playlistID);
+	var uri="webapi/playlist/edit/"+playlistID;
+	$.ajax({
+	url : uri,
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	data: JSON.stringify({
+	playlist_name:$('#playlistName2').val(),
+	playlist_pic_url: $('#playlistPicURL2').val() ,
+	playlist_color: $('#playlistColor2').val()
+	        }),
+	        success: function(data){
+	        }
+	});
+	$('#playlistEditForm').modal('toggle');
+	console.log("Calling myfunction");
+    	myfunction(student_id);
+	
+	}	
+
+	function fillrecording(id){
+	console.log("fill recording called");
+	var id,name,color,pic_url,sid;
+	var uri="webapi/recording/getRecordingDetail/"+id;
+	$.ajax({
+	url : uri,
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	        success: function(data){
+	        	console.log(data);
+	        	sid=data[0].song_id;
+	        	id=data[0].recording_id;
+	        	name=data[0].recording_name;
+	        	color=data[0].recording_color;
+	        	pic_url=data[0].recording_pic_url;
+	        }
+	});
+	console.log(id+name+color+pic_url);
+	editRecording(id,name,color,pic_url,sid);
+	}
+	
+	
+	
+	function fillplaylist(id){
+	var id,name,color,pic_url;
+	var uri="webapi/playlist/getPlaylistDetail/"+id;
+	$.ajax({
+	url : uri,
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	        success: function(data){
+	        	console.log(data);
+	        	id=data[0].playlist_id;
+	        	name=data[0].playlist_name;
+	        	color=data[0].playlist_color;
+	        	pic_url=data[0].playlist_pic_url;
+	        }
+	});
+	console.log(id+name+color+pic_url);
+	editplaylist(id,name,color,pic_url);
+	}
+	
+	
+	function recordingList() {
+	//alert("in recording");
+	$.ajax({
+	url : URL+'/webapi/recording/fetchall',
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	        success: function(data){
+	       //alert("in success");
+	        	var no_of_object = data.length;	
+	var tdata = '<thead>'+
+	        '<tr>'+
+	            '<th>Recording Name</th>'+
+	            '<th>Recording color</th>'+
+	            '<th>Picture </th>'+
+	            '<th>Song Name</th>'+
+	            '<th>Edit</th>'+
+	            '<th>Delete</th>'+
+	        '</tr>'+
+	    '</thead>';
+	$('#recordingList').empty();
+	if(no_of_object == 0) {
+	tdata += '<tfoot><tr><td> No data found </td></tr></tfoot>';
+	}
+	else {
+	for (var i = 0; i < no_of_object; i++) {
+	var recording_name = data[i]['recording_name'];
+	var recording_color = data[i]['recording_color'];
+	var recording_pic_url = data[i]['recording_pic_url'];
+	var recording_id = data[i]['recording_id'];
+	var song_name = data[i]['song_name'];
+	var song_id = data[i]['song_id'];
+	recording_pic_url = recording_pic_url.replace("https://drive.google.com/uc?export=download&id=","https://drive.google.com/uc?id=")
+	tdata += '<tr><td>'+recording_name+'</td>'+
+	'<td bgcolor="'+recording_color+'"</td>'+
+	'<td><img src="'+recording_pic_url+'" style="width:100px;height:50px;"></td>'+
+	'<td>'+song_name+'</td>'+
+	'<td><a href="#recordingEditForm" data-toggle="modal" onclick="editRecording(\''+recording_id+'\',\''+recording_name+'\',\''+recording_color+'\',\''+recording_pic_url+'\',\''+song_id+'\')">click here</a></td>'+
+	'<td><a href onclick="deleteRecording(\''+recording_id+'\',\''+recording_name+'\')">click here</a></td></tr>';
+	}
+	}
+	//alert(recording_name);
+	$('#recordingList').append(tdata);
+	        }
+	});
+	}
+
+
+	function clearfield(){
+	$("#recordingName").val("");
+	$('#recordingPicURL').val("");
+	
+	}
+	function displayonTextField(){
+	var str = "";
+	  $( "select option:selected" ).each(function(index){
+	  if (index==0) {
+	  	str +=$( this ).text() + " ";
+	  }
+	  });
+	  console.log(str);
+	  $("#recordingName").val(str);
+	}
+	function displayonTextField2(){
+	var str = "";
+	  $( "select option:selected" ).each(function(index){
+	  if (index==1) {
+	  	str +=$( this ).text() + " ";
+	  }
+	  });
+	  console.log(str);
+	  $("#recordingName2").val(str);
+	}
+	function getSongList()
+	{
+	console.log("Get song list called");
+	var uri="webapi/song/fetchall";
+	$('#songlist').empty();
+	$('#songlist2').empty();
+	$('#songlist').append('<option hidden="true">Select Song</option>');
+	$.ajax({
+	url : uri,
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	        success : function(data){
+	        	console.log(data);
+	        	for(var i=0 ; i<data.length ; i++){
+	        	$('#songlist').append('<option value="'+data[i]['song_id']+'">'+data[i]['song_name']+'</option>');
+	        	$('#songlist2').append('<option value="'+data[i]['song_id']+'">'+data[i]['song_name']+'</option>');
+	        	}
+	        }
+	});
+	}
+
+	function recordingProfileSubmit()
+	{
+	console.log("In recording Profile Submit");
+	var uri="webapi/recording/";
+	$.ajax({
+	url : uri,
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	data: JSON.stringify({
+	recording_name:$('#recordingName').val(),
+	recording_pic_url: $('#recordingPicURL').val() ,
+	recording_color: $('#recordingColor').val() ,
+	song_id: $('#songlist').val()
+	        }),
+	        success: function(data){
+	        	alert("Recording created successfully");
+	        	clearfield();
+	        }
+	});
+	
+	$('#recordingProfileForm').modal('toggle');
+	myfunction2(playlist_id);
+	}
+
+	function deleteRecording(id,name) {
+	var uri="webapi/recording/delete/"+id;
+	if (confirm("Do you want to delete "+name+" ?") == true) {
+	$.ajax({
+	url : uri,
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	        success: function(data){
+	        }
+	});
+	    } 
+	//recordingList();
+	      	
+	}
+	function HEX_rgb (hex){
+	    var a = 'rgb(' + parseInt(hex.substring(0,2), 16) + ", " + parseInt(hex.substring(2,4), 16) + ", " + parseInt(hex.substring(4,6), 16) + ')';
+	    return a;
+	}
+
+	var recordingID = '';
+	function editRecording(id,name,color,url,sid) {
+	recordingID = id;
+	//$('#songlist2').val(sid);
+	getSongList(sid);
+	$('#recordingName2').val(name);
+	$('#recordingColor2').val(color);
+	$('#recordingPicURL2').val(url);
+	document.getElementById('recordingColor2').jscolor.valueElement.style.backgroundColor = HEX_rgb(color);
+	
+	}
+
+	function saveEditedRecording()  {
+	var uri="webapi/recording/edit/"+recordingID;
+	$.ajax({
+	url : uri,
+	type : 'POST',
+	dataType : 'json',
+	contentType: 'application/json',
+	async: false,
+	data: JSON.stringify({
+	recording_name:$('#recordingName2').val(),
+	recording_pic_url: $('#recordingPicURL2').val() ,
+	recording_color: $('#recordingColor2').val() ,
+	song_id: $('#songlist2').val() 
+	
+	        }),
+	        success: function(data){
+	        }
+	});
+	$('#recordingEditForm').modal('toggle');
+	myfunction2(playlist_id);
+	}
+	
+</script>
+
+ 
+ <!--   <h4 class="text-center">Hitham</h4>	-->  
+ 
+ <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Hitham</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="visual3.html">Student Level Analysis</a></li>
+      <li><a href="visual4.html">Raaga-Taal Level Analysis</a></li>
+      <li><a href="visual5.html">Student-Song HeatMap</a></li>
+      
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+    	<li><a href="#playlistProfileForm"  data-toggle="modal" style ="text-decoration: none;border:1px; border-radius: 10px; margin-top: 5px; background-color: SlateBlue; float:left; color: white; padding: 10px 25px; text-align: center; text-decoration: none;	display: inline-block">Create PlayList</a></li>
+    	<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+	  	<li><a href="#recordingProfileForm" onclick="getSongList()"  data-toggle="modal" style ="text-decoration: none; float:right; border:1px; margin-top: 5px; border-radius: 10px; margin-right: 100px; background-color: SlateBlue; color: white; padding: 10px 25px; text-align: center; text-decoration: none;display: inline-block">Create Recording</a></li>
+        <li><a href="#" onclick="logout()" ><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
+      </ul>
+  </div>
+</nav>
+   
+    <div id="main_div">
+        <div class="table-responsive" id="stu_ass"></div>
+        <div class="table-responsive" id="stu_not_ass"></div>
+        <div class="table-responsive" id="play_ass"></div>
+        <div class="table-responsive" id="play_not_ass"></div>
+        <div class="table-responsive" id="rec_ass"></div>
+        <div class="table-responsive" id="rec_not_ass"></div>
+    </div>
+    
+   <div id="playlistProfileForm" class="modal fade">
+  <div class="modal-dialog" id="playlistmodal">
+  <form class="form-horizontal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"  aria-hidden="true"></button>
+        <h4 class="modal-title" style="text-align:center">New playlist</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+   	<div class="form-group">
+	<label class="control-label col-sm-3">Name</label>
+	<div class="col-sm-7">
+	<input type="text" class="form-control" style="width:250px" name="playlistName" id="playlistName"/>
+	</div>
+	</div>
+	<div class="form-group">
+	<label class="control-label col-sm-3">Color</label>
+	<div class="col-sm-7">
+	<!-- <input name="playlistColor" type="hidden" id="playlistColor" value="99cc00">
+        	<button class="jscolor {valueElement: 'playlistColor', zIndex:9999} ">Pick a color</button> -->
+        	<input class="jscolor {valueElement: 'playlistColor', zIndex:9999}" value="ab3567" name="playlistColor" id="playlistColor" style="background-image: none; background-color: rgb(171, 114, 48); color: rgb(255, 255, 255);">
+	</div>
+	</div>
+	<div class="form-group">
+	<label class="control-label col-sm-3">Picture URL</label>
+	<div class="col-sm-7">
+	<input type="text" class="form-control" style="width:250px" name="playlistPicURL" id="playlistPicURL"/>
+	</div>
+	</div>
+	
+           
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"  onclick="ProfileSubmit()" id="btn1" >Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- playlist edit form -->
+<div id="playlistEditForm" class="modal fade">
+  <div class="modal-dialog" id="playlistmodal">
+  <form class="form-horizontal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"  aria-hidden="true"></button>
+        <h4 class="modal-title">Edit playlist details</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+      	<div class="form-group">
+	<label class="control-label col-sm-3">playlist Name	</label>
+	<div class="col-sm-7">
+	<input type="text" class="form-control" style="width:250px" name="playlistName2" id="playlistName2"/>
+	</div>
+	</div>
+	<div class="form-group">
+	<label class="control-label col-sm-3">Color</label>
+	<div class="col-sm-7">
+	<!-- <input name="playlistColor2" type="hidden" id="playlistColor2">
+        	<button class="jscolor {valueElement: 'playlistColor2', zIndex:9999} ">Pick a color</button> -->
+	<input class="jscolor {zIndex:9999}" name="playlistColor2" id="playlistColor2" style="background-image: none;">
+	</div>
+	</div>
+	<div class="form-group">
+	<label class="control-label col-sm-3">Picture URL</label>
+	<div class="col-sm-7">
+	<input type="text" class="form-control" style="width:250px" name="playlistPicURL2" id="playlistPicURL2"/>
+	</div>
+	</div>
+           
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"  onclick="saveEditedplaylist()" id="btn2" >Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Create New Recording form -->
+
+<div id="recordingProfileForm" class="modal fade">
+  <div class="modal-dialog">
+  <form class="form-horizontal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"  aria-hidden="true"></button>
+        <h4 class="modal-title">New Recording</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+   	<div class="form-group">
+	<label class="control-label col-sm-3">Song Name</label>
+	<div class="col-sm-7">
+	<select id="songlist" onchange="displayonTextField()">
+                   
+                </select>
+	</div>
+	</div>
+	<div class="form-group">
+	<label class="control-label col-sm-3">Recording Name</label>
+	<div class="col-sm-7">
+	<input type="text" class="form-control" style="width:250px" name="recordingName" id="recordingName"/>
+	</div>
+	</div>
+	<div class="form-group">
+	<label class="control-label col-sm-3">Color</label>
+	<div class="col-sm-7">
+	<!--  <input name="recordingColor" type="hidden" id="recordingColor" value="99cc00">
+        	<button class="jscolor {valueElement: 'recordingColor', zIndex:9999} ">Pick a color</button> -->
+	  <input class="jscolor {valueElement: 'recordingColor', zIndex:9999}" value="F0FFD4" name="recordingColor" id="recordingColor" style="background-image: none; background-color: rgb(171, 114, 48); color: rgb(255, 255, 255);">
+	<!--  <input type='text' id="basic" /> -->
+	</div>
+	</div>
+	<div class="form-group">
+	<label class="control-label col-sm-3">Pic URL</label>
+	<div class="col-sm-7">
+	<input type="text" class="form-control" style="width:250px" name="recordingPicURL" id="recordingPicURL"/>
+	</div>
+	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"  onclick="recordingProfileSubmit()" id="recordingCreateSubmit" >Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Recording edit form -->
+<div id="recordingEditForm" class="modal fade">
+  <div class="modal-dialog" id="playlistmodal">
+  <form class="form-horizontal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"  aria-hidden="true"></button>
+        <h4 class="modal-title">Edit recording details</h4>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll ; height:250px ">
+      	<div class="form-group">
+	<label class="control-label col-sm-3">Song Name</label>
+	<div class="col-sm-7">
+	<select id="songlist2" onchange="displayonTextField2()">
+                   
+                </select>
+	</div>
+	</div>
+      	<div class="form-group">
+	<label class="control-label col-sm-3">Recording Name</label>
+	<div class="col-sm-7">
+	<input type="text" class="form-control" style="width:250px" name="recordingName2" id="recordingName2"/>
+	</div>
+	</div>
+	<div class="form-group">
+	<label class="control-label col-sm-3">Color</label>
+	<div class="col-sm-7">
+	 <input class="jscolor {zIndex:9999}" name="recordingColor2" id="recordingColor2" style="background-image: none;">
+	<!--   <input type="color" class="form-control" value="#ff0000" style="width:250px" name="recordingColor2" id="recordingColor2"/> -->
+	 <!-- <input name="recordingColor2" type="hidden" id="recordingColor2">
+        	<button class="jscolor {valueElement: 'recordingColor2', zIndex: 9999} ">Pick a color</button> -->
+	</div>
+	</div>
+	<div class="form-group">
+	<label class="control-label col-sm-3">Pic URL</label>
+	<div class="col-sm-7">
+	<input type="text" class="form-control" style="width:250px" name="recordingPicURL2" id="recordingPicURL2"/>
+	</div>
+	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"  onclick="saveEditedRecording()" id="btn2" >Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+     </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+    
+ 
+</body>
+
+</html>
